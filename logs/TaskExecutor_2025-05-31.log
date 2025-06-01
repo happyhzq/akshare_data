@@ -1,0 +1,140 @@
+2025-05-31 14:31:19,702 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina{.INX}_20250531143119
+2025-05-31 14:31:19,702 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina{.INX}_20250531143119_fetch, 类型: DataFetchTask
+2025-05-31 14:31:19,943 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina{.INX}_20250531143119_fetch, 错误: 任务执行失败: pipeline_index_us_stock_sina{.INX}_20250531143119_fetch
+2025-05-31 14:31:19,943 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina{.INX}_20250531143119, 错误: 任务执行失败: pipeline_index_us_stock_sina{.INX}_20250531143119_fetch
+2025-05-31 14:33:21,461 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina{symbol=.INX}_20250531143321
+2025-05-31 14:33:21,462 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina{symbol=.INX}_20250531143321_fetch, 类型: DataFetchTask
+2025-05-31 14:33:21,651 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina{symbol=.INX}_20250531143321_fetch, 错误: 任务执行失败: pipeline_index_us_stock_sina{symbol=.INX}_20250531143321_fetch
+2025-05-31 14:33:21,651 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina{symbol=.INX}_20250531143321, 错误: 任务执行失败: pipeline_index_us_stock_sina{symbol=.INX}_20250531143321_fetch
+2025-05-31 14:54:05,576 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531145405
+2025-05-31 14:54:05,576 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531145405_fetch, 类型: DataFetchTask
+2025-05-31 14:54:06,034 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531145405_process, 类型: DataProcessTask
+2025-05-31 14:54:06,040 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531145405_compare, 类型: DataCompareTask
+2025-05-31 14:54:06,057 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531145405_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531145405_compare
+2025-05-31 14:54:06,057 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531145405, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531145405_compare
+2025-05-31 15:09:11,388 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531150911
+2025-05-31 15:09:11,389 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531150911_fetch, 类型: DataFetchTask
+2025-05-31 15:09:11,844 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531150911_process, 类型: DataProcessTask
+2025-05-31 15:09:11,849 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531150911_compare, 类型: DataCompareTask
+2025-05-31 15:09:11,855 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531150911_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531150911_compare
+2025-05-31 15:09:11,855 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531150911, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531150911_compare
+2025-05-31 15:11:57,375 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531151157
+2025-05-31 15:11:57,375 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531151157_fetch, 类型: DataFetchTask
+2025-05-31 15:11:57,778 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531151157_process, 类型: DataProcessTask
+2025-05-31 15:11:57,782 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531151157_compare, 类型: DataCompareTask
+2025-05-31 15:11:57,788 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531151157_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531151157_compare
+2025-05-31 15:11:57,788 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531151157, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531151157_compare
+2025-05-31 15:12:31,124 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531151231
+2025-05-31 15:12:31,124 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531151231_fetch, 类型: DataFetchTask
+2025-05-31 15:12:31,506 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531151231_process, 类型: DataProcessTask
+2025-05-31 15:12:31,510 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531151231_compare, 类型: DataCompareTask
+2025-05-31 15:12:31,515 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531151231_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531151231_compare
+2025-05-31 15:12:31,515 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531151231, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531151231_compare
+2025-05-31 15:19:37,672 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531151937
+2025-05-31 15:19:37,672 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531151937_fetch, 类型: DataFetchTask
+2025-05-31 15:19:38,063 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531151937_process, 类型: DataProcessTask
+2025-05-31 15:19:38,066 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531151937_compare, 类型: DataCompareTask
+2025-05-31 15:19:38,072 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531151937_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531151937_compare
+2025-05-31 15:19:38,072 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531151937, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531151937_compare
+2025-05-31 15:22:54,039 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531152254
+2025-05-31 15:22:54,040 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531152254_fetch, 类型: DataFetchTask
+2025-05-31 15:22:54,451 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531152254_process, 类型: DataProcessTask
+2025-05-31 15:22:54,455 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531152254_compare, 类型: DataCompareTask
+2025-05-31 15:22:54,462 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531152254_insert, 类型: DataStoreTask
+2025-05-31 15:22:54,689 - TaskExecutor - INFO - 数据管道执行成功: pipeline_index_us_stock_sina_20250531152254
+2025-05-31 15:33:30,232 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531153330
+2025-05-31 15:33:30,232 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531153330_fetch, 类型: DataFetchTask
+2025-05-31 15:33:30,624 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531153330_process, 类型: DataProcessTask
+2025-05-31 15:33:30,628 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531153330_compare, 类型: DataCompareTask
+2025-05-31 15:33:30,651 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531153330_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531153330_compare
+2025-05-31 15:33:30,651 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531153330, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531153330_compare
+2025-05-31 15:43:58,218 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531154358
+2025-05-31 15:43:58,218 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531154358_fetch, 类型: DataFetchTask
+2025-05-31 15:43:58,688 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531154358_process, 类型: DataProcessTask
+2025-05-31 15:43:58,694 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531154358_compare, 类型: DataCompareTask
+2025-05-31 15:43:58,713 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531154358_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531154358_compare
+2025-05-31 15:43:58,713 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531154358, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531154358_compare
+2025-05-31 15:45:01,117 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531154501
+2025-05-31 15:45:01,118 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531154501_fetch, 类型: DataFetchTask
+2025-05-31 15:45:01,534 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531154501_process, 类型: DataProcessTask
+2025-05-31 15:45:01,538 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531154501_compare, 类型: DataCompareTask
+2025-05-31 15:45:01,557 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531154501_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531154501_compare
+2025-05-31 15:45:01,557 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531154501, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531154501_compare
+2025-05-31 16:04:41,489 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531160441
+2025-05-31 16:04:41,489 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531160441_fetch, 类型: DataFetchTask
+2025-05-31 16:04:41,933 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531160441_process, 类型: DataProcessTask
+2025-05-31 16:04:41,938 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531160441_compare, 类型: DataCompareTask
+2025-05-31 16:04:41,956 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531160441_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531160441_compare
+2025-05-31 16:04:41,957 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531160441, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531160441_compare
+2025-05-31 16:05:43,519 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531160543
+2025-05-31 16:05:43,520 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531160543_fetch, 类型: DataFetchTask
+2025-05-31 16:05:44,013 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531160543_process, 类型: DataProcessTask
+2025-05-31 16:05:44,017 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531160543_compare, 类型: DataCompareTask
+2025-05-31 16:05:44,035 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531160543_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531160543_compare
+2025-05-31 16:05:44,035 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531160543, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531160543_compare
+2025-05-31 16:16:54,943 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531161654
+2025-05-31 16:16:54,943 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531161654_fetch, 类型: DataFetchTask
+2025-05-31 16:16:55,450 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531161654_process, 类型: DataProcessTask
+2025-05-31 16:16:55,454 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531161654_compare, 类型: DataCompareTask
+2025-05-31 16:16:55,456 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531161654_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531161654_compare
+2025-05-31 16:16:55,456 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531161654, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531161654_compare
+2025-05-31 16:37:31,646 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531163731
+2025-05-31 16:37:31,646 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531163731_fetch, 类型: DataFetchTask
+2025-05-31 16:37:32,062 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531163731_process, 类型: DataProcessTask
+2025-05-31 16:37:32,066 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531163731_compare, 类型: DataCompareTask
+2025-05-31 16:37:32,085 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531163731_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531163731_compare
+2025-05-31 16:37:32,085 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531163731, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531163731_compare
+2025-05-31 16:41:27,282 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531164127
+2025-05-31 16:41:27,282 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531164127_fetch, 类型: DataFetchTask
+2025-05-31 16:41:27,744 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531164127_process, 类型: DataProcessTask
+2025-05-31 16:41:27,748 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531164127_compare, 类型: DataCompareTask
+2025-05-31 16:41:27,767 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531164127_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531164127_compare
+2025-05-31 16:41:27,767 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531164127, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531164127_compare
+2025-05-31 17:23:26,349 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531172326
+2025-05-31 17:23:26,349 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531172326_fetch, 类型: DataFetchTask
+2025-05-31 17:23:26,811 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531172326_process, 类型: DataProcessTask
+2025-05-31 17:23:26,816 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531172326_compare, 类型: DataCompareTask
+2025-05-31 17:23:26,835 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531172326_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531172326_compare
+2025-05-31 17:23:26,835 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531172326, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531172326_compare
+2025-05-31 17:25:52,087 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531172552
+2025-05-31 17:25:52,087 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531172552_fetch, 类型: DataFetchTask
+2025-05-31 17:25:52,661 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531172552_process, 类型: DataProcessTask
+2025-05-31 17:25:52,665 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531172552_compare, 类型: DataCompareTask
+2025-05-31 17:25:52,688 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531172552_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531172552_compare
+2025-05-31 17:25:52,688 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531172552, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531172552_compare
+2025-05-31 17:34:02,403 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531173402
+2025-05-31 17:34:02,404 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531173402_fetch, 类型: DataFetchTask
+2025-05-31 17:34:02,798 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531173402_process, 类型: DataProcessTask
+2025-05-31 17:34:02,801 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531173402_compare, 类型: DataCompareTask
+2025-05-31 17:34:02,822 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531173402_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531173402_compare
+2025-05-31 17:34:02,822 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531173402, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531173402_compare
+2025-05-31 17:41:42,567 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531174142
+2025-05-31 17:41:42,567 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174142_fetch, 类型: DataFetchTask
+2025-05-31 17:41:42,997 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174142_process, 类型: DataProcessTask
+2025-05-31 17:41:43,001 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174142_compare, 类型: DataCompareTask
+2025-05-31 17:41:43,004 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531174142_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174142_compare
+2025-05-31 17:41:43,004 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531174142, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174142_compare
+2025-05-31 17:43:05,375 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531174305
+2025-05-31 17:43:05,375 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174305_fetch, 类型: DataFetchTask
+2025-05-31 17:43:05,775 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174305_process, 类型: DataProcessTask
+2025-05-31 17:43:05,779 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174305_compare, 类型: DataCompareTask
+2025-05-31 17:43:05,781 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531174305_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174305_compare
+2025-05-31 17:43:05,781 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531174305, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174305_compare
+2025-05-31 17:44:32,464 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531174432
+2025-05-31 17:44:32,464 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174432_fetch, 类型: DataFetchTask
+2025-05-31 17:44:32,840 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174432_process, 类型: DataProcessTask
+2025-05-31 17:44:32,844 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174432_compare, 类型: DataCompareTask
+2025-05-31 17:44:32,861 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531174432_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174432_compare
+2025-05-31 17:44:32,861 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531174432, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174432_compare
+2025-05-31 17:45:06,290 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531174506
+2025-05-31 17:45:06,290 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174506_fetch, 类型: DataFetchTask
+2025-05-31 17:45:06,696 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174506_process, 类型: DataProcessTask
+2025-05-31 17:45:06,700 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174506_compare, 类型: DataCompareTask
+2025-05-31 17:45:06,717 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531174506_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174506_compare
+2025-05-31 17:45:06,717 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531174506, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174506_compare
+2025-05-31 17:46:25,927 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250531174625
+2025-05-31 17:46:25,927 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174625_fetch, 类型: DataFetchTask
+2025-05-31 17:46:26,335 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174625_process, 类型: DataProcessTask
+2025-05-31 17:46:26,339 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250531174625_compare, 类型: DataCompareTask
+2025-05-31 17:46:26,356 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250531174625_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174625_compare
+2025-05-31 17:46:26,356 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531174625, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174625_compare

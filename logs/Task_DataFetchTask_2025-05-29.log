@@ -1,0 +1,28 @@
+2025-05-29 15:41:52,349 - Task_DataFetchTask - INFO - 开始执行任务: pipeline_ak_stock_zh_a_hist_20250529154152_fetch
+2025-05-29 15:41:52,349 - Task_DataFetchTask - INFO - 开始获取数据: ak_stock_zh_a_hist
+2025-05-29 15:41:52,350 - Task_DataFetchTask - ERROR - 任务执行失败: pipeline_ak_stock_zh_a_hist_20250529154152_fetch, 错误: 获取数据失败: ak_stock_zh_a_hist, 错误: 接口不存在: ak_stock_zh_a_hist
+2025-05-29 15:41:52,350 - Task_DataFetchTask - INFO - 任务执行耗时: 0.00秒
+2025-05-29 15:44:39,416 - Task_DataFetchTask - INFO - 开始执行任务: pipeline_ak.stock_zh_a_hist_20250529154439_fetch
+2025-05-29 15:44:39,416 - Task_DataFetchTask - INFO - 开始获取数据: ak.stock_zh_a_hist
+2025-05-29 15:44:39,417 - Task_DataFetchTask - ERROR - 任务执行失败: pipeline_ak.stock_zh_a_hist_20250529154439_fetch, 错误: 获取数据失败: ak.stock_zh_a_hist, 错误: 接口不存在: ak.stock_zh_a_hist
+2025-05-29 15:44:39,417 - Task_DataFetchTask - INFO - 任务执行耗时: 0.00秒
+2025-05-29 16:08:59,073 - Task_DataFetchTask - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529160859_fetch
+2025-05-29 16:08:59,073 - Task_DataFetchTask - INFO - 开始获取数据: stock_zh_a_hist
+2025-05-29 16:09:00,932 - Task_DataFetchTask - INFO - 数据获取成功: stock_zh_a_hist, 行数: 8162
+2025-05-29 16:09:00,932 - Task_DataFetchTask - INFO - 任务执行成功: pipeline_stock_zh_a_hist_20250529160859_fetch
+2025-05-29 16:09:00,932 - Task_DataFetchTask - INFO - 任务执行耗时: 1.86秒
+2025-05-29 21:25:15,091 - Task_DataFetchTask - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529212515_fetch
+2025-05-29 21:25:15,092 - Task_DataFetchTask - INFO - 开始获取数据: stock_zh_a_hist
+2025-05-29 21:25:15,943 - Task_DataFetchTask - INFO - 数据获取成功: stock_zh_a_hist, 行数: 8162
+2025-05-29 21:25:15,944 - Task_DataFetchTask - INFO - 任务执行成功: pipeline_stock_zh_a_hist_20250529212515_fetch
+2025-05-29 21:25:15,944 - Task_DataFetchTask - INFO - 任务执行耗时: 0.85秒
+2025-05-29 21:43:35,127 - Task_DataFetchTask - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529214335_fetch
+2025-05-29 21:43:35,127 - Task_DataFetchTask - INFO - 开始获取数据: stock_zh_a_hist
+2025-05-29 21:43:35,903 - Task_DataFetchTask - INFO - 数据获取成功: stock_zh_a_hist, 行数: 8162
+2025-05-29 21:43:35,903 - Task_DataFetchTask - INFO - 任务执行成功: pipeline_stock_zh_a_hist_20250529214335_fetch
+2025-05-29 21:43:35,903 - Task_DataFetchTask - INFO - 任务执行耗时: 0.78秒
+2025-05-29 22:01:08,168 - Task_DataFetchTask - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529220108_fetch
+2025-05-29 22:01:08,168 - Task_DataFetchTask - INFO - 开始获取数据: stock_zh_a_hist
+2025-05-29 22:01:08,716 - Task_DataFetchTask - INFO - 数据获取成功: stock_zh_a_hist, 行数: 8162
+2025-05-29 22:01:08,716 - Task_DataFetchTask - INFO - 任务执行成功: pipeline_stock_zh_a_hist_20250529220108_fetch
+2025-05-29 22:01:08,716 - Task_DataFetchTask - INFO - 任务执行耗时: 0.55秒

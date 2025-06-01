@@ -1,0 +1,36 @@
+2025-05-29 13:44:34,110 - AkShareFetcher - INFO - 初始化AkShare接口信息
+2025-05-29 13:44:34,111 - AkShareFetcher - INFO - 发现0个AkShare接口函数
+2025-05-29 15:40:59,819 - AkShareFetcher - INFO - 初始化AkShare接口信息
+2025-05-29 15:40:59,820 - AkShareFetcher - INFO - 发现0个AkShare接口函数
+2025-05-29 15:41:52,349 - AkShareFetcher - INFO - 初始化AkShare接口信息
+2025-05-29 15:41:52,350 - AkShareFetcher - INFO - 发现0个AkShare接口函数
+2025-05-29 15:41:52,350 - AkShareFetcher - INFO - 开始获取数据: ak_stock_zh_a_hist, 参数: {}
+2025-05-29 15:41:52,350 - AkShareFetcher - ERROR - 获取数据失败: ak_stock_zh_a_hist, 错误: 接口不存在: ak_stock_zh_a_hist
+2025-05-29 15:44:39,416 - AkShareFetcher - INFO - 初始化AkShare接口信息
+2025-05-29 15:44:39,417 - AkShareFetcher - INFO - 发现0个AkShare接口函数
+2025-05-29 15:44:39,417 - AkShareFetcher - INFO - 开始获取数据: ak.stock_zh_a_hist, 参数: {}
+2025-05-29 15:44:39,417 - AkShareFetcher - ERROR - 获取数据失败: ak.stock_zh_a_hist, 错误: 接口不存在: ak.stock_zh_a_hist
+2025-05-29 16:08:59,073 - AkShareFetcher - INFO - 初始化AkShare接口信息
+2025-05-29 16:08:59,074 - AkShareFetcher - INFO - 发现0个AkShare接口函数
+2025-05-29 16:08:59,074 - AkShareFetcher - INFO - 开始获取数据: stock_zh_a_hist, 参数: {}
+2025-05-29 16:09:00,932 - AkShareFetcher - INFO - 数据获取成功: stock_zh_a_hist, 行数: 8162, 列数: 12
+2025-05-29 18:28:35,363 - AkShareFetcher - INFO - 初始化AkShare接口信息
+2025-05-29 18:28:35,364 - AkShareFetcher - INFO - 发现0个AkShare接口函数
+2025-05-29 21:02:49,893 - AkShareFetcher - INFO - 初始化AkShare接口信息
+2025-05-29 21:02:50,058 - AkShareFetcher - WARNING - 扫描模块时出错: 连接异常, 请检查您的Token是否过期和输入的参数是否正确
+2025-05-29 21:02:50,067 - AkShareFetcher - INFO - 发现2357个AkShare接口函数
+2025-05-29 21:25:15,092 - AkShareFetcher - INFO - 初始化AkShare接口信息
+2025-05-29 21:25:15,255 - AkShareFetcher - WARNING - 扫描模块时出错: 连接异常, 请检查您的Token是否过期和输入的参数是否正确
+2025-05-29 21:25:15,261 - AkShareFetcher - INFO - 发现2357个AkShare接口函数
+2025-05-29 21:25:15,261 - AkShareFetcher - INFO - 开始获取数据: stock_zh_a_hist, 参数: {}
+2025-05-29 21:25:15,943 - AkShareFetcher - INFO - 数据获取成功: stock_zh_a_hist, 行数: 8162, 列数: 12
+2025-05-29 21:43:35,127 - AkShareFetcher - INFO - 初始化AkShare接口信息
+2025-05-29 21:43:35,284 - AkShareFetcher - WARNING - 扫描模块时出错: 连接异常, 请检查您的Token是否过期和输入的参数是否正确
+2025-05-29 21:43:35,291 - AkShareFetcher - INFO - 发现2357个AkShare接口函数
+2025-05-29 21:43:35,291 - AkShareFetcher - INFO - 开始获取数据: stock_zh_a_hist, 参数: {}
+2025-05-29 21:43:35,903 - AkShareFetcher - INFO - 数据获取成功: stock_zh_a_hist, 行数: 8162, 列数: 12
+2025-05-29 22:01:08,168 - AkShareFetcher - INFO - 初始化AkShare接口信息
+2025-05-29 22:01:08,335 - AkShareFetcher - WARNING - 扫描模块时出错: 连接异常, 请检查您的Token是否过期和输入的参数是否正确
+2025-05-29 22:01:08,344 - AkShareFetcher - INFO - 发现2357个AkShare接口函数
+2025-05-29 22:01:08,344 - AkShareFetcher - INFO - 开始获取数据: stock_zh_a_hist, 参数: {}
+2025-05-29 22:01:08,716 - AkShareFetcher - INFO - 数据获取成功: stock_zh_a_hist, 行数: 8162, 列数: 12

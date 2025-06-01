@@ -1,0 +1,2 @@
+2025-05-31 15:22:54,461 - DataComparator - INFO - 开始比对数据，表: raw_index_us_stock_sina, 新数据: 5387行, 已有数据: 0行
+2025-05-31 15:22:54,461 - DataComparator - INFO - 已有数据为空，所有新数据将被插入

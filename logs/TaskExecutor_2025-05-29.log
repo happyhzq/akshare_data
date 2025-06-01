@@ -1,0 +1,26 @@
+2025-05-29 15:41:52,349 - TaskExecutor - INFO - 开始执行数据管道: pipeline_ak_stock_zh_a_hist_20250529154152
+2025-05-29 15:41:52,349 - TaskExecutor - INFO - 开始执行任务: pipeline_ak_stock_zh_a_hist_20250529154152_fetch, 类型: DataFetchTask
+2025-05-29 15:41:52,350 - TaskExecutor - ERROR - 任务执行失败: pipeline_ak_stock_zh_a_hist_20250529154152_fetch, 错误: 任务执行失败: pipeline_ak_stock_zh_a_hist_20250529154152_fetch
+2025-05-29 15:41:52,350 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_ak_stock_zh_a_hist_20250529154152, 错误: 任务执行失败: pipeline_ak_stock_zh_a_hist_20250529154152_fetch
+2025-05-29 15:44:39,415 - TaskExecutor - INFO - 开始执行数据管道: pipeline_ak.stock_zh_a_hist_20250529154439
+2025-05-29 15:44:39,416 - TaskExecutor - INFO - 开始执行任务: pipeline_ak.stock_zh_a_hist_20250529154439_fetch, 类型: DataFetchTask
+2025-05-29 15:44:39,417 - TaskExecutor - ERROR - 任务执行失败: pipeline_ak.stock_zh_a_hist_20250529154439_fetch, 错误: 任务执行失败: pipeline_ak.stock_zh_a_hist_20250529154439_fetch
+2025-05-29 15:44:39,417 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_ak.stock_zh_a_hist_20250529154439, 错误: 任务执行失败: pipeline_ak.stock_zh_a_hist_20250529154439_fetch
+2025-05-29 16:08:59,072 - TaskExecutor - INFO - 开始执行数据管道: pipeline_stock_zh_a_hist_20250529160859
+2025-05-29 16:08:59,073 - TaskExecutor - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529160859_fetch, 类型: DataFetchTask
+2025-05-29 16:09:00,933 - TaskExecutor - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529160859_process, 类型: DataProcessTask
+2025-05-29 16:09:00,944 - TaskExecutor - ERROR - 任务执行失败: pipeline_stock_zh_a_hist_20250529160859_process, 错误: 任务执行失败: pipeline_stock_zh_a_hist_20250529160859_process
+2025-05-29 16:09:00,944 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_stock_zh_a_hist_20250529160859, 错误: 任务执行失败: pipeline_stock_zh_a_hist_20250529160859_process
+2025-05-29 21:25:15,091 - TaskExecutor - INFO - 开始执行数据管道: pipeline_stock_zh_a_hist_20250529212515
+2025-05-29 21:25:15,091 - TaskExecutor - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529212515_fetch, 类型: DataFetchTask
+2025-05-29 21:25:15,944 - TaskExecutor - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529212515_process, 类型: DataProcessTask
+2025-05-29 21:25:15,955 - TaskExecutor - ERROR - 任务执行失败: pipeline_stock_zh_a_hist_20250529212515_process, 错误: 任务执行失败: pipeline_stock_zh_a_hist_20250529212515_process
+2025-05-29 21:25:15,955 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_stock_zh_a_hist_20250529212515, 错误: 任务执行失败: pipeline_stock_zh_a_hist_20250529212515_process
+2025-05-29 21:43:35,127 - TaskExecutor - INFO - 开始执行数据管道: pipeline_stock_zh_a_hist_20250529214335
+2025-05-29 21:43:35,127 - TaskExecutor - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529214335_fetch, 类型: DataFetchTask
+2025-05-29 21:43:35,904 - TaskExecutor - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529214335_process, 类型: DataProcessTask
+2025-05-29 21:43:35,909 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_stock_zh_a_hist_20250529214335, 错误: 'NoneType' object is not subscriptable
+2025-05-29 22:01:08,167 - TaskExecutor - INFO - 开始执行数据管道: pipeline_stock_zh_a_hist_20250529220108
+2025-05-29 22:01:08,168 - TaskExecutor - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529220108_fetch, 类型: DataFetchTask
+2025-05-29 22:01:08,716 - TaskExecutor - INFO - 开始执行任务: pipeline_stock_zh_a_hist_20250529220108_process, 类型: DataProcessTask
+2025-05-29 22:01:08,724 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_stock_zh_a_hist_20250529220108, 错误: 'table_data'

@@ -1,0 +1,2 @@
+2025-05-30 22:08:10,600 - DataTransformer - INFO - 开始转换数据，数据形状: (5389, 7)
+2025-05-30 22:08:10,600 - DataTransformer - ERROR - 数据转换失败: 未找到接口 index_us_stock_sina 的模式映射

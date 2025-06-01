@@ -1,0 +1,97 @@
+"""
+配置文件示例
+"""
+# 基本配置
+log_dir: "/home/ubuntu/akshare_data_pipeline/logs"
+log_level: "INFO"
+task_registry_file: "/home/ubuntu/akshare_data_pipeline/task_registry.json"
+
+# 数据库配置
+database:
+  driver: "mysql+pymysql"
+  host: "localhost"
+  port: 3306
+  username: "username"  # 请修改为实际用户名
+  password: "password"  # 请修改为实际密码
+  database: "akshare_data"  # 请修改为实际数据库名
+  pool_size: 10
+  max_overflow: 20
+  pool_recycle: 3600
+
+# 数据获取配置
+fetcher:
+  type: "akshare"
+  config: {}
+
+# 数据处理配置
+processor:
+  cleaner_type: "standard"
+  cleaner_config:
+    fill_na: true
+    na_values: ["-", "N/A", "n/a", "null", "NULL", "None", ""]
+  
+  transformer_config:
+    add_metadata: true
+    batch_size: 1000
+
+# 数据存储配置
+storage:
+  batch_size: 1000
+  retry_count: 3
+
+# 模式映射配置（示例）
+schema_mapping:
+  # 股票行情数据
+  "ak_stock_zh_a_hist":
+    table_name: "stock_market_data"
+    interface_id: 1
+    column_mapping:
+      "日期": "trade_date"
+      "开盘": "open_price"
+      "收盘": "close_price"
+      "最高": "high_price"
+      "最低": "low_price"
+      "成交量": "volume"
+      "成交额": "amount"
+      "振幅": "amplitude"
+      "涨跌幅": "change_percent"
+      "涨跌额": "change_amount"
+      "换手率": "turnover_rate"
+      "代码": "stock_code"
+      "名称": "stock_name"
+  
+  # 宏观经济数据
+  "ak_macro_china_*":
+    table_name: "macro_economic_indicators"
+    interface_id: 2
+    column_mapping:
+      "指标名称": "indicator_name"
+      "数值": "indicator_value"
+      "日期": "data_date"
+      "地区": "region"
+      "国家": "country"
+      "单位": "unit"
+
+  # 外汇汇率数据
+  "ak_fx_spot_quote":
+    table_name: "forex_exchange_rates"
+    interface_id: 3
+    column_mapping:
+      "货币对": "currency_pair"
+      "买入价": "bid_rate"
+      "卖出价": "ask_rate"
+      "中间价": "exchange_rate"
+      "时间": "rate_time"
+      "日期": "rate_date"
+
+# 键列配置（用于比对和更新）
+key_columns:
+  "stock_market_data": ["trade_date", "stock_code"]
+  "macro_economic_indicators": ["data_date", "indicator_name", "country"]
+  "forex_exchange_rates": ["rate_date", "currency_pair"]
+
+# 唯一约束配置（用于防止重复插入）
+unique_constraints:
+  "stock_market_data": ["trade_date", "stock_code"]
+  "macro_economic_indicators": ["data_date", "indicator_name", "country", "frequency"]
+  "forex_exchange_rates": ["rate_date", "rate_time", "currency_pair", "source"]

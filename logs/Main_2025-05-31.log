@@ -1,0 +1,146 @@
+2025-05-31 14:31:19,624 - Main - INFO - 系统初始化开始
+2025-05-31 14:31:19,701 - Main - INFO - 数据库连接测试成功
+2025-05-31 14:31:19,702 - Main - INFO - 系统初始化完成
+2025-05-31 14:31:19,702 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina{.INX}_20250531143119
+2025-05-31 14:31:19,943 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina{.INX}_20250531143119, 错误: 任务执行失败: pipeline_index_us_stock_sina{.INX}_20250531143119_fetch
+2025-05-31 14:33:21,401 - Main - INFO - 系统初始化开始
+2025-05-31 14:33:21,461 - Main - INFO - 数据库连接测试成功
+2025-05-31 14:33:21,461 - Main - INFO - 系统初始化完成
+2025-05-31 14:33:21,461 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina{symbol=.INX}_20250531143321
+2025-05-31 14:33:21,651 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina{symbol=.INX}_20250531143321, 错误: 任务执行失败: pipeline_index_us_stock_sina{symbol=.INX}_20250531143321_fetch
+2025-05-31 14:54:05,330 - Main - INFO - 系统初始化开始
+2025-05-31 14:54:05,388 - Main - INFO - 数据库连接测试成功
+2025-05-31 14:54:05,389 - Main - INFO - 系统初始化完成
+2025-05-31 14:54:05,576 - Main - INFO - 使用接口参数: {'symbol': '.INX'}
+2025-05-31 14:54:05,576 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531145405
+2025-05-31 14:54:06,057 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531145405, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531145405_compare
+2025-05-31 14:54:50,252 - Main - INFO - 系统初始化开始
+2025-05-31 14:54:50,308 - Main - INFO - 数据库连接测试成功
+2025-05-31 14:54:50,308 - Main - INFO - 系统初始化完成
+2025-05-31 15:09:11,120 - Main - INFO - 系统初始化开始
+2025-05-31 15:09:11,196 - Main - INFO - 数据库连接测试成功
+2025-05-31 15:09:11,196 - Main - INFO - 系统初始化完成
+2025-05-31 15:09:11,388 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 15:09:11,388 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531150911
+2025-05-31 15:09:11,855 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531150911, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531150911_compare
+2025-05-31 15:11:57,136 - Main - INFO - 系统初始化开始
+2025-05-31 15:11:57,191 - Main - INFO - 数据库连接测试成功
+2025-05-31 15:11:57,191 - Main - INFO - 系统初始化完成
+2025-05-31 15:11:57,375 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 15:11:57,375 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531151157
+2025-05-31 15:11:57,788 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531151157, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531151157_compare
+2025-05-31 15:12:30,893 - Main - INFO - 系统初始化开始
+2025-05-31 15:12:30,950 - Main - INFO - 数据库连接测试成功
+2025-05-31 15:12:30,950 - Main - INFO - 系统初始化完成
+2025-05-31 15:12:31,124 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 15:12:31,124 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531151231
+2025-05-31 15:12:31,515 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531151231, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531151231_compare
+2025-05-31 15:19:37,427 - Main - INFO - 系统初始化开始
+2025-05-31 15:19:37,482 - Main - INFO - 数据库连接测试成功
+2025-05-31 15:19:37,483 - Main - INFO - 系统初始化完成
+2025-05-31 15:19:37,671 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 15:19:37,671 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531151937
+2025-05-31 15:19:38,072 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531151937, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531151937_compare
+2025-05-31 15:22:53,787 - Main - INFO - 系统初始化开始
+2025-05-31 15:22:53,843 - Main - INFO - 数据库连接测试成功
+2025-05-31 15:22:53,843 - Main - INFO - 系统初始化完成
+2025-05-31 15:22:54,039 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 15:22:54,039 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531152254
+2025-05-31 15:22:54,689 - Main - INFO - 数据管道执行成功: pipeline_index_us_stock_sina_20250531152254
+2025-05-31 15:22:54,689 - Main - INFO - 数据管道执行结果: 插入 0 行, 更新 0 行, 错误 6 行
+2025-05-31 15:33:29,981 - Main - INFO - 系统初始化开始
+2025-05-31 15:33:30,039 - Main - INFO - 数据库连接测试成功
+2025-05-31 15:33:30,040 - Main - INFO - 系统初始化完成
+2025-05-31 15:33:30,232 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 15:33:30,232 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531153330
+2025-05-31 15:33:30,651 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531153330, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531153330_compare
+2025-05-31 15:43:57,915 - Main - INFO - 系统初始化开始
+2025-05-31 15:43:57,976 - Main - INFO - 数据库连接测试成功
+2025-05-31 15:43:57,976 - Main - INFO - 系统初始化完成
+2025-05-31 15:43:58,218 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 15:43:58,218 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531154358
+2025-05-31 15:43:58,713 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531154358, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531154358_compare
+2025-05-31 15:45:00,892 - Main - INFO - 系统初始化开始
+2025-05-31 15:45:00,947 - Main - INFO - 数据库连接测试成功
+2025-05-31 15:45:00,947 - Main - INFO - 系统初始化完成
+2025-05-31 15:45:01,117 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 15:45:01,117 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531154501
+2025-05-31 15:45:01,557 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531154501, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531154501_compare
+2025-05-31 16:04:41,215 - Main - INFO - 系统初始化开始
+2025-05-31 16:04:41,290 - Main - INFO - 数据库连接测试成功
+2025-05-31 16:04:41,291 - Main - INFO - 系统初始化完成
+2025-05-31 16:04:41,488 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 16:04:41,488 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531160441
+2025-05-31 16:04:41,957 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531160441, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531160441_compare
+2025-05-31 16:05:43,278 - Main - INFO - 系统初始化开始
+2025-05-31 16:05:43,333 - Main - INFO - 数据库连接测试成功
+2025-05-31 16:05:43,333 - Main - INFO - 系统初始化完成
+2025-05-31 16:05:43,519 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 16:05:43,519 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531160543
+2025-05-31 16:05:44,036 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531160543, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531160543_compare
+2025-05-31 16:16:54,728 - Main - INFO - 系统初始化开始
+2025-05-31 16:16:54,757 - Main - INFO - 数据库连接测试成功
+2025-05-31 16:16:54,757 - Main - INFO - 系统初始化完成
+2025-05-31 16:16:54,943 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 16:16:54,943 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531161654
+2025-05-31 16:16:55,456 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531161654, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531161654_compare
+2025-05-31 16:37:31,392 - Main - INFO - 系统初始化开始
+2025-05-31 16:37:31,421 - Main - INFO - 数据库连接测试成功
+2025-05-31 16:37:31,422 - Main - INFO - 系统初始化完成
+2025-05-31 16:37:31,645 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 16:37:31,645 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531163731
+2025-05-31 16:37:32,085 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531163731, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531163731_compare
+2025-05-31 16:41:27,043 - Main - INFO - 系统初始化开始
+2025-05-31 16:41:27,070 - Main - INFO - 数据库连接测试成功
+2025-05-31 16:41:27,070 - Main - INFO - 系统初始化完成
+2025-05-31 16:41:27,282 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 16:41:27,282 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531164127
+2025-05-31 16:41:27,768 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531164127, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531164127_compare
+2025-05-31 17:23:26,112 - Main - INFO - 系统初始化开始
+2025-05-31 17:23:26,152 - Main - INFO - 数据库连接测试成功
+2025-05-31 17:23:26,152 - Main - INFO - 系统初始化完成
+2025-05-31 17:23:26,348 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 17:23:26,348 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531172326
+2025-05-31 17:23:26,835 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531172326, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531172326_compare
+2025-05-31 17:25:51,862 - Main - INFO - 系统初始化开始
+2025-05-31 17:25:51,892 - Main - INFO - 数据库连接测试成功
+2025-05-31 17:25:51,892 - Main - INFO - 系统初始化完成
+2025-05-31 17:25:52,086 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 17:25:52,087 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531172552
+2025-05-31 17:25:52,688 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531172552, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531172552_compare
+2025-05-31 17:34:02,180 - Main - INFO - 系统初始化开始
+2025-05-31 17:34:02,216 - Main - INFO - 数据库连接测试成功
+2025-05-31 17:34:02,217 - Main - INFO - 系统初始化完成
+2025-05-31 17:34:02,403 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 17:34:02,403 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531173402
+2025-05-31 17:34:02,822 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531173402, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531173402_compare
+2025-05-31 17:41:42,367 - Main - INFO - 系统初始化开始
+2025-05-31 17:41:42,396 - Main - INFO - 数据库连接测试成功
+2025-05-31 17:41:42,397 - Main - INFO - 系统初始化完成
+2025-05-31 17:41:42,566 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 17:41:42,566 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531174142
+2025-05-31 17:41:43,004 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531174142, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174142_compare
+2025-05-31 17:43:05,163 - Main - INFO - 系统初始化开始
+2025-05-31 17:43:05,192 - Main - INFO - 数据库连接测试成功
+2025-05-31 17:43:05,193 - Main - INFO - 系统初始化完成
+2025-05-31 17:43:05,375 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 17:43:05,375 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531174305
+2025-05-31 17:43:05,781 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531174305, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174305_compare
+2025-05-31 17:44:32,249 - Main - INFO - 系统初始化开始
+2025-05-31 17:44:32,277 - Main - INFO - 数据库连接测试成功
+2025-05-31 17:44:32,277 - Main - INFO - 系统初始化完成
+2025-05-31 17:44:32,463 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 17:44:32,463 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531174432
+2025-05-31 17:44:32,861 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531174432, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174432_compare
+2025-05-31 17:45:06,075 - Main - INFO - 系统初始化开始
+2025-05-31 17:45:06,104 - Main - INFO - 数据库连接测试成功
+2025-05-31 17:45:06,105 - Main - INFO - 系统初始化完成
+2025-05-31 17:45:06,290 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 17:45:06,290 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531174506
+2025-05-31 17:45:06,717 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531174506, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174506_compare
+2025-05-31 17:46:25,724 - Main - INFO - 系统初始化开始
+2025-05-31 17:46:25,754 - Main - INFO - 数据库连接测试成功
+2025-05-31 17:46:25,754 - Main - INFO - 系统初始化完成
+2025-05-31 17:46:25,926 - Main - INFO - 使用接口参数: {'symbol': '.IXIC'}
+2025-05-31 17:46:25,927 - Main - INFO - 开始运行数据管道: pipeline_index_us_stock_sina_20250531174625
+2025-05-31 17:46:26,356 - Main - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250531174625, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250531174625_compare
