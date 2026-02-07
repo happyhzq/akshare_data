@@ -49,95 +49,253 @@ class DataStore:
                 - database: 数据库名
                 - url: 完整的数据库URL（如果提供，将忽略上述字段）
                 - pool_size: 连接池大小
-                - max_overflow: 最大溢出连接数
-                - pool_recycle: 连接回收时间（秒）
-                - connect_args: 连接参数
+                - max_overflow: 连接池最大溢出
+                - pool_timeout: 连接池超时时间
+                - pool_recycle: 连接池回收时间
+                - echo: 是否回显SQL
+                - auto_create_table: 是否自动创建表
                 - batch_size: 批处理大小
                 - retry_count: 重试次数
-                - auto_create_table: 是否自动创建表
-                - auto_create_table_options: 自动创建表的选项
+                - retry_interval: 重试间隔
+                - unique_constraints: 唯一约束字典，格式为 {表名: [列名列表]}
         """
         self.config = config
-        self.name = self.__class__.__name__
-        self.logger = LoggerManager().get_logger(self.name)
+        self.logger = LoggerManager().get_logger("DataStore")
+        
+        # 创建数据库引擎
+        self.engine = self._create_engine()
+        
+        # 创建元数据对象
+        self.metadata = MetaData()
+        
+        # 创建会话工厂
+        self.Session = sessionmaker(bind=self.engine)
+        
+        # 获取配置参数
+        self.auto_create_table = config.get('auto_create_table', True)
+        self.batch_size = config.get('batch_size', 1000)
+        self.retry_count = config.get('retry_count', 3)
+        self.retry_interval = config.get('retry_interval', 1)
+        self.unique_constraints = config.get('unique_constraints', {})
         
         # 初始化数据库连接
-        self._init_db_connection()
-        
-        # 批处理大小
-        self.batch_size = config.get('batch_size', 1000)
-        
-        # 重试次数
-        self.retry_count = config.get('retry_count', 3)
-        
-        # 自动建表配置
-        self.auto_create_table = config.get('auto_create_table', False)
-        self.auto_create_table_options = config.get('auto_create_table_options', {
-            'add_primary_key': True,
-            'add_insert_time': True,
-            'add_update_time': True
-        })
-        
-        self.logger.debug(f"数据存储器初始化完成，自动建表: {self.auto_create_table}")
+        self._init_connection()
     
-    def _init_db_connection(self) -> None:
+    def _create_engine(self) -> Engine:
         """
-        初始化数据库连接
+        创建数据库引擎
         
+        Returns:
+            Engine: SQLAlchemy引擎对象
+            
         Raises:
-            DatabaseError: 数据库连接失败
+            DatabaseError: 创建引擎失败
         """
         try:
-            # 如果提供了完整URL，直接使用
+            # 获取数据库URL
             if 'url' in self.config:
-                self.db_url = self.config['url']
+                db_url = self.config['url']
             else:
-                # 否则，构建URL
                 driver = self.config.get('driver', 'mysql+pymysql')
                 host = self.config.get('host', 'localhost')
                 port = self.config.get('port', 3306)
                 username = self.config.get('username', 'root')
-                password = self.config.get('password', )
-                database = self.config.get('database', )
+                password = self.config.get('password', '')
+                database = self.config.get('database', '')
                 
-                self.db_url = f"{driver}://{username}:{password}@{host}:{port}/{database}"
+                db_url = f"{driver}://{username}:{password}@{host}:{port}/{database}"
             
-            # 连接参数
-            connect_args = self.config.get('connect_args', {})
-            
-            # 连接池配置
+            # 获取连接池配置
             pool_size = self.config.get('pool_size', 5)
             max_overflow = self.config.get('max_overflow', 10)
+            pool_timeout = self.config.get('pool_timeout', 30)
             pool_recycle = self.config.get('pool_recycle', 3600)
+            echo = self.config.get('echo', False)
+            
+            # 获取其他连接参数
+            connect_args = self.config.get('connect_args', {})
             
             # 创建引擎
-            self.engine = create_engine(
-                self.db_url,
+            engine = create_engine(
+                db_url,
+                poolclass=QueuePool,
                 pool_size=pool_size,
                 max_overflow=max_overflow,
+                pool_timeout=pool_timeout,
                 pool_recycle=pool_recycle,
+                echo=echo,
                 connect_args=connect_args
             )
             
-            # 创建元数据对象
-            self.metadata = MetaData()
+            self.logger.info(f"数据库连接初始化成功: {host}:{port}/{database}")
             
-            # 创建会话工厂
-            self.Session = sessionmaker(bind=self.engine)
-            
-            # 记录连接信息（不包含敏感信息）
-            db_info = f"{self.config.get('host', 'localhost')}:{self.config.get('port', 3306)}/{self.config.get('database', '')}"
-            self.logger.info(f"数据库连接初始化成功: {db_info}")
-            
-            # 测试连接
-            with self.engine.connect() as conn:
-                conn.execute(text("SELECT 1"))
-                self.logger.info("数据库连接测试成功")
+            return engine
             
         except Exception as e:
-            error_msg = f"数据库连接初始化失败: {str(e)}"
+            error_msg = f"创建数据库引擎失败: {str(e)}"
             self.logger.error(error_msg)
             raise DatabaseError(error_msg, details=str(e))
+    
+    def _init_connection(self) -> None:
+        """
+        初始化数据库连接
+        
+        Raises:
+            DatabaseError: 初始化连接失败
+        """
+        try:
+            # 测试连接
+            if self.test_connection():
+                self.logger.info("数据库连接测试成功")
+            else:
+                self.logger.error("数据库连接测试失败")
+                raise DatabaseError("数据库连接测试失败")
+                
+        except Exception as e:
+            error_msg = f"初始化数据库连接失败: {str(e)}"
+            self.logger.error(error_msg)
+            raise DatabaseError(error_msg, details=str(e))
+    
+    def test_connection(self) -> bool:
+        """
+        测试数据库连接
+        
+        Returns:
+            bool: 连接是否成功
+        """
+        try:
+            # 执行简单查询
+            with self.engine.connect() as conn:
+                conn.execute(text("SELECT 1"))
+            return True
+        except Exception as e:
+            self.logger.error(f"数据库连接测试失败: {str(e)}")
+            return False
+    
+    def _map_dtype_to_sqlalchemy(self, dtype) -> Any:
+        """
+        将pandas数据类型映射到SQLAlchemy类型
+        
+        Args:
+            dtype: pandas数据类型
+            
+        Returns:
+            Any: SQLAlchemy类型
+        """
+        dtype_str = str(dtype)
+        
+        if 'int' in dtype_str:
+            return Integer
+        elif 'float' in dtype_str:
+            return Float
+        elif 'datetime' in dtype_str:
+            return DateTime
+        elif 'bool' in dtype_str:
+            return Boolean
+        else:
+            return String(255)
+
+    def _compile_sql_type_for_ddl(self, col_type: Any) -> str:
+        """
+        将SQLAlchemy类型编译为当前数据库方言可执行的DDL类型字符串
+
+        Args:
+            col_type: SQLAlchemy类型（可能是类型类或类型实例）
+
+        Returns:
+            str: 可直接用于DDL语句的类型字符串
+        """
+        # _map_dtype_to_sqlalchemy 可能返回 Integer / DateTime 这类类型类
+        if isinstance(col_type, type):
+            col_type = col_type()
+
+        return col_type.compile(dialect=self.engine.dialect)
+    
+    def _reflect_table_with_retry(self, table_name: str) -> Table:
+        """
+        反射表结构，带重试机制
+        
+        Args:
+            table_name: 表名
+            
+        Returns:
+            Table: 表对象
+            
+        Raises:
+            NoSuchTableError: 表不存在
+            DatabaseError: 反射表结构失败
+        """
+        # 尝试多次反射表结构
+        for attempt in range(self.retry_count):
+            try:
+                # 尝试反射表结构
+                table = Table(table_name, self.metadata, autoload_with=self.engine)
+                return table
+            except NoSuchTableError:
+                # 表不存在，直接抛出异常
+                self.logger.warning(f"表 {table_name} 不存在")
+                raise
+            except Exception as e:
+                # 其他异常，记录日志并重试
+                self.logger.warning(f"反射表 {table_name} 结构失败，尝试 {attempt+1}/{self.retry_count}: {str(e)}")
+                
+                # 如果是最后一次尝试，则抛出异常
+                if attempt == self.retry_count - 1:
+                    # 尝试使用不同的方法反射表结构
+                    try:
+                        # 使用inspect反射表结构
+                        inspector = inspect(self.engine)
+                        if table_name in inspector.get_table_names():
+                            # 表存在，但反射失败，尝试手动创建Table对象
+                            columns = inspector.get_columns(table_name)
+                            table = Table(table_name, self.metadata)
+                            for column in columns:
+                                table.append_column(Column(
+                                    column['name'],
+                                    column['type'],
+                                    primary_key=column.get('primary_key', False),
+                                    nullable=column.get('nullable', True)
+                                ))
+                            return table
+                        else:
+                            # 表不存在
+                            raise NoSuchTableError(table_name)
+                    except Exception as e2:
+                        # 再次尝试使用text直接查询表结构
+                        try:
+                            with self.engine.connect() as conn:
+                                # 使用SHOW COLUMNS查询表结构
+                                result = conn.execute(text(f"SHOW COLUMNS FROM {table_name}"))
+                                columns = result.fetchall()
+                                
+                                if not columns:
+                                    # 表不存在或没有列
+                                    raise NoSuchTableError(table_name)
+                                
+                                # 手动创建Table对象
+                                table = Table(table_name, self.metadata)
+                                for column in columns:
+                                    # column格式: (Field, Type, Null, Key, Default, Extra)
+                                    name = column[0]
+                                    type_str = column[1]
+                                    nullable = column[2] == 'YES'
+                                    is_primary = column[3] == 'PRI'
+                                    
+                                    # 映射MySQL类型到SQLAlchemy类型
+                                    col_type = self._map_mysql_type_to_sqlalchemy(type_str)
+                                    
+                                    # 添加列
+                                    table.append_column(Column(
+                                        name,
+                                        col_type,
+                                        primary_key=is_primary,
+                                        nullable=nullable
+                                    ))
+                                
+                                return table
+                        except Exception as e3:
+                            self.logger.error(f"最终反射表结构失败: {str(e3)}")
+                            raise DatabaseError(f"反射表结构失败: {table_name}", details=str(e3))
     
     def query_data(self, table_name: str, conditions: Dict[str, Any] = None, limit: int = None) -> pd.DataFrame:
         """
@@ -161,37 +319,101 @@ class DataStore:
             session = self.Session()
             
             try:
-                # 反射表结构
+                # 首先尝试清除元数据缓存，确保获取最新的表结构
+                self.metadata.clear()
+                self.logger.debug(f"已清除元数据缓存，准备查询表 {table_name}")
+                
+                # 反射表结构（使用增强的反射方法）
                 try:
-                    table = Table(table_name, self.metadata, autoload_with=self.engine)
-                except (SQLAlchemyError, NoSuchTableError) as e:
-                    # 捕获表不存在的异常
-                    error_msg = str(e).lower()
-                    if any(msg in error_msg for msg in ["doesn't exist", "no such table", "unknown table", "table not found", "table or view does not exist", "exist"]):
-                        self.logger.warning(f"表 {table_name} 不存在，且未启用自动建表")
-                        if self.auto_create_table:
-                            self.logger.info(f"自动建表功能已启用，但需要数据来推断表结构。将返回空DataFrame。")
-                        raise DatabaseError(f"表 {table_name} 不存在，且未启用自动建表")
+                    table = self._reflect_table_with_retry(table_name)
+                except NoSuchTableError:
+                    # 表不存在，根据自动建表设置决定返回空DataFrame或抛出异常
+                    if self.auto_create_table:
+                        self.logger.info(f"表 {table_name} 不存在，自动建表功能已启用，但需要数据来推断表结构。将返回空DataFrame。")
+                        return pd.DataFrame()
                     else:
-                        # 其他SQLAlchemy错误
-                        raise DatabaseError(f"反射表结构失败: {str(e)}")
+                        self.logger.warning(f"表 {table_name} 不存在，且未启用自动建表")
+                        raise DatabaseError(f"表 {table_name} 不存在，且未启用自动建表")
+                except Exception as e:
+                    # 捕获所有其他异常，尝试判断是否是表不存在或反射失败
+                    error_str = str(e).lower()
+                    
+                    # 检查是否是表不存在错误
+                    table_not_exists = any(msg in error_str for msg in [
+                        "doesn't exist", "no such table", "unknown table", 
+                        "table not found", "table or view does not exist",
+                        "反射表结构失败"  # 捕获我们自定义的错误消息
+                    ])
+                    
+                    if table_not_exists and self.auto_create_table:
+                        self.logger.warning(f"反射表 {table_name} 结构失败，错误: {str(e)}，将返回空DataFrame")
+                        return pd.DataFrame()
+                    else:
+                        # 其他错误或未启用自动建表，抛出异常
+                        self.logger.error(f"反射表结构失败: {table_name}")
+                        raise DatabaseError(f"反射表结构失败: {table_name}", details=str(e))
                 
-                # 构建查询
-                query = select([table])
+                # 构建查询 - 使用兼容SQLAlchemy新版本的语法
+                query = select(table)
                 
+                # 添加条件
                 # 添加条件
                 if conditions:
                     condition_clauses = []
                     for column, value in conditions.items():
+                        # 检查列是否存在于表中
+                        if column not in table.columns:
+                            self.logger.warning(f"列 {column} 不存在于表 {table_name} 中，跳过该条件")
+                            continue
+
+                        # 获取列类型
+                        column_type = str(table.c[column].type).lower()    
+                        # 检查是否是浮点数列
+                        is_float_column = str(table.c[column].type).lower() in ['float', 'double', 'real', 'numeric', 'decimal']
+                        # 调试信息：输出列类型
+                        self.logger.info(f"列 {column} 类型: {column_type}, 是否浮点数: {is_float_column}")
+
                         if isinstance(value, list):
-                            # 如果值是列表，使用IN操作符
-                            condition_clauses.append(table.c[column].in_(value))
+                            if is_float_column:
+                                # 对浮点数列使用范围查询
+                                or_conditions = []
+                                for v in value:
+                                    try:
+                                        v_float = float(v)
+                                        # 允许0.000001的误差
+                                        or_conditions.append(and_(
+                                            table.c[column] >= v_float - 0.000001,
+                                            table.c[column] <= v_float + 0.000001
+                                        ))
+                                    except (ValueError, TypeError):
+                                        # 处理无法转换为浮点数的情况
+                                        or_conditions.append(table.c[column] == v)
+                                condition_clauses.append(or_(*or_conditions))
+                            else:
+                                # 非浮点数列使用IN操作符
+                                condition_clauses.append(table.c[column].in_(value))
                         else:
-                            # 否则使用等于操作符
-                            condition_clauses.append(table.c[column] == value)
-                    
-                    if condition_clauses:
-                        query = query.where(and_(*condition_clauses))
+                            if is_float_column:
+                                try:
+                                    v_float = float(value)
+                                    # 单个浮点数值使用范围查询
+                                    condition_clauses.append(and_(
+                                        table.c[column] >= v_float - 0.00001,
+                                        table.c[column] <= v_float + 0.00001
+                                    ))
+                                except (ValueError, TypeError):
+                                    # 处理无法转换为浮点数的情况
+                                    condition_clauses.append(table.c[column] == value)
+                            else:
+                                # 非浮点数使用等于操作符
+                                condition_clauses.append(table.c[column] == value)
+
+                # 确保条件被正确应用
+                if condition_clauses:
+                    query = query.where(and_(*condition_clauses))
+                    self.logger.debug(f"应用查询条件: {query}")
+                else:
+                    self.logger.warning(f"没有有效的查询条件，将返回所有数据")
                 
                 # 添加限制
                 if limit:
@@ -202,7 +424,6 @@ class DataStore:
                 
                 # 转换为DataFrame
                 df = pd.DataFrame(result.fetchall(), columns=result.keys())
-                
                 self.logger.info(f"查询成功，返回 {len(df)} 行数据")
                 
                 return df
@@ -273,24 +494,47 @@ class DataStore:
             session = self.Session()
             
             try:
-                # 反射表结构
+                # 反射表结构（使用增强的反射方法）
                 try:
-                    table = Table(table_name, self.metadata, autoload_with=self.engine)
+                    # 首先尝试清除元数据缓存，确保获取最新的表结构
+                    self.metadata.clear()
+                    self.logger.debug(f"已清除元数据缓存，准备反射表 {table_name} 结构")
+                    
+                    table = self._reflect_table_with_retry(table_name)
                     self.logger.debug(f"表 {table_name} 已存在，使用现有表结构")
-                except (SQLAlchemyError, NoSuchTableError) as e:
-                    # 捕获表不存在的异常
-                    error_msg = str(e).lower()
-                    if any(msg in error_msg for msg in ["doesn't exist", "no such table", "unknown table", "table not found", "table or view does not exist"]):
-                        # 如果启用了自动建表，则创建表
-                        if self.auto_create_table:
-                            self.logger.info(f"表 {table_name} 不存在，将自动创建")
-                            table = self._create_table_from_dataframe(data, table_name, session)
-                        else:
-                            self.logger.error(f"表 {table_name} 不存在，且未启用自动建表")
-                            raise DatabaseError(f"表 {table_name} 不存在，且未启用自动建表")
+                except NoSuchTableError:
+                    # 表不存在，根据自动建表设置决定创建表或抛出异常
+                    if self.auto_create_table:
+                        self.logger.info(f"表 {table_name} 不存在，将自动创建")
+                        table = self._create_table_from_dataframe(data, table_name, session)
                     else:
-                        # 其他SQLAlchemy错误
-                        raise DatabaseError(f"反射表结构失败: {str(e)}")
+                        self.logger.error(f"表 {table_name} 不存在，且未启用自动建表")
+                        raise DatabaseError(f"表 {table_name} 不存在，且未启用自动建表")
+                except Exception as e:
+                    # 捕获所有其他异常，尝试判断是否是表不存在或反射失败
+                    error_str = str(e).lower()
+                    
+                    # 检查是否是表不存在错误
+                    table_not_exists = any(msg in error_str for msg in [
+                        "doesn't exist", "no such table", "unknown table", 
+                        "table not found", "table or view does not exist",
+                        "反射表结构失败"  # 捕获我们自定义的错误消息
+                    ])
+                    
+                    if table_not_exists and self.auto_create_table:
+                        self.logger.warning(f"反射表 {table_name} 结构失败，错误: {str(e)}，将尝试创建新表")
+                        try:
+                            # 再次清除元数据缓存
+                            self.metadata.clear()
+                            # 尝试创建表
+                            table = self._create_table_from_dataframe(data, table_name, session)
+                        except Exception as create_error:
+                            self.logger.error(f"创建表 {table_name} 失败: {str(create_error)}")
+                            raise DatabaseError(f"反射表结构失败且无法创建新表: {table_name}", details=str(e))
+                    else:
+                        # 其他错误或未启用自动建表，抛出异常
+                        self.logger.error(f"反射表结构失败: {table_name}")
+                        raise DatabaseError(f"反射表结构失败: {table_name}", details=str(e))
                 
                 # 添加插入时间和更新时间
                 df = data.copy()
@@ -303,6 +547,9 @@ class DataStore:
                 # 检查表是否有update_time列
                 if 'update_time' in table.columns and 'update_time' not in df.columns:
                     df['update_time'] = now
+                    
+                # 检查并添加DataFrame中存在但表结构中不存在的列（自动schema演进）
+                self._ensure_columns_exist(table, df, table_name, session)
                 
                 # 将数据分批插入
                 total_rows = len(df)
@@ -324,57 +571,71 @@ class DataStore:
                         session.commit()
                         
                         inserted += batch_size
-                        self.logger.debug(f"批次 {i//self.batch_size + 1}/{(total_rows-1)//self.batch_size + 1} 插入成功: {batch_size}行")
+                        self.logger.debug(f"成功插入 {batch_size} 行数据，总进度: {inserted}/{total_rows}")
                         
                     except Exception as e:
                         # 回滚事务
                         session.rollback()
                         
                         failed += batch_size
-                        self.logger.error(f"批次 {i//self.batch_size + 1}/{(total_rows-1)//self.batch_size + 1} 插入失败: {str(e)}")
+                        self.logger.error(f"插入数据失败，批次 {i//self.batch_size + 1}: {str(e)}")
                         
-                        # 记录详细错误信息
-                        self.logger.debug(f"插入失败详情: {traceback.format_exc()}")
-                        
-                        # 如果是完整性错误（如唯一约束冲突），尝试逐行插入
-                        if isinstance(e, IntegrityError) or "duplicate" in str(e).lower() or "unique constraint" in str(e).lower():
-                            self.logger.info(f"检测到完整性错误，尝试逐行插入以跳过冲突记录")
-                            
-                            # 重置计数
-                            failed = 0
-                            inserted_in_retry = 0
+                        # 如果是唯一约束冲突，尝试逐行插入
+                        error_str = str(e).lower()
+                        if any(msg in error_str for msg in ["duplicate", "unique constraint", "integrity constraint", "违反唯一约束"]):
+                            self.logger.warning(f"检测到唯一约束冲突，尝试逐行插入以跳过冲突行")
                             
                             # 逐行插入
                             for _, row in batch.iterrows():
                                 try:
+                                    # 转换为字典
                                     record = row.to_dict()
+                                    
+                                    # 插入数据
                                     session.execute(table.insert(), [record])
+                                    
+                                    # 提交事务
                                     session.commit()
-                                    inserted_in_retry += 1
-                                except Exception as e2:
+                                    
+                                    inserted += 1
+                                    failed -= 1
+                                    
+                                except Exception as row_error:
+                                    # 回滚事务
                                     session.rollback()
-                                    failed += 1
-                                    self.logger.debug(f"行插入失败: {str(e2)}")
-                            
-                            inserted += inserted_in_retry
-                            self.logger.info(f"逐行插入结果: 成功 {inserted_in_retry}行, 失败 {failed}行")
+                                    
+                                    # 记录错误但继续处理下一行
+                                    self.logger.debug(f"插入行数据失败: {str(row_error)}")
                 
-                result = {
-                    'success': failed == 0,
-                    'inserted': inserted,
-                    'failed': failed,
-                    'total': total_rows
+                self.logger.info(f"数据插入完成，成功: {inserted} 行，失败: {failed} 行")
+                
+                return {
+                    'success': True,
+                    'operation': 'insert',
+                    'table_name': table_name,
+                    'inserted_count': inserted,
+                    'failed_count': failed,
+                    'total_count': total_rows
                 }
                 
-                self.logger.info(f"数据插入完成，成功: {inserted}行, 失败: {failed}行")
-                
-                return result
+            except DatabaseError:
+                # 重新抛出DatabaseError
+                raise
+            except Exception as e:
+                # 捕获所有其他异常
+                error_msg = f"数据插入失败: {table_name}"
+                self.logger.error(f"{error_msg}: {str(e)}")
+                raise DatabaseError(error_msg, details=str(e))
                 
             finally:
                 # 关闭会话
                 session.close()
                 
+        except DatabaseError:
+            # 重新抛出DatabaseError
+            raise
         except Exception as e:
+            # 捕获所有其他异常
             error_msg = f"数据插入失败: {table_name}"
             self.logger.error(f"{error_msg}: {str(e)}")
             raise DatabaseError(error_msg, details=str(e))
@@ -386,7 +647,7 @@ class DataStore:
         Args:
             data: 要更新的数据DataFrame
             table_name: 表名
-            key_columns: 键列列表，用于标识要更新的记录
+            key_columns: 用于定位记录的键列列表
             metadata: 数据元信息
             
         Returns:
@@ -399,6 +660,9 @@ class DataStore:
             self.logger.warning(f"要更新的数据为空，跳过更新")
             return {'success': True, 'updated': 0, 'failed': 0}
         
+        if not key_columns:
+            raise ValueError("更新操作必须指定键列")
+        
         self.logger.info(f"开始更新表 {table_name} 中的数据，数据行数: {len(data)}")
         
         try:
@@ -408,24 +672,22 @@ class DataStore:
             try:
                 # 反射表结构
                 try:
-                    table = Table(table_name, self.metadata, autoload_with=self.engine)
-                except (SQLAlchemyError, NoSuchTableError) as e:
-                    # 捕获表不存在的异常
-                    error_msg = str(e).lower()
-                    if any(msg in error_msg for msg in ["doesn't exist", "no such table", "unknown table", "table not found", "table or view does not exist"]):
-                        # 如果启用了自动建表，则创建表
-                        if self.auto_create_table:
-                            self.logger.info(f"表 {table_name} 不存在，将自动创建")
-                            table = self._create_table_from_dataframe(data, table_name, session)
-                            # 对于新建表，执行插入而不是更新
-                            session.close()
-                            return self.insert_data(data, table_name, metadata)
-                        else:
-                            self.logger.error(f"表 {table_name} 不存在，且未启用自动建表")
-                            raise DatabaseError(f"表 {table_name} 不存在，且未启用自动建表")
-                    else:
-                        # 其他SQLAlchemy错误
-                        raise DatabaseError(f"反射表结构失败: {str(e)}")
+                    # 首先尝试清除元数据缓存，确保获取最新的表结构
+                    self.metadata.clear()
+                    self.logger.debug(f"已清除元数据缓存，准备反射表 {table_name} 结构")
+                    
+                    table = self._reflect_table_with_retry(table_name)
+                except NoSuchTableError:
+                    # 表不存在，抛出异常
+                    self.logger.error(f"表 {table_name} 不存在，无法更新数据")
+                    raise DatabaseError(f"表 {table_name} 不存在，无法更新数据")
+                except Exception as e:
+                    # 捕获所有其他异常
+                    self.logger.error(f"反射表结构失败: {table_name}")
+                    raise DatabaseError(f"反射表结构失败: {table_name}", details=str(e))
+                
+                # 检查并添加DataFrame中存在但表结构中不存在的列（自动schema演进）
+                self._ensure_columns_exist(table, data, table_name, session)
                 
                 # 添加更新时间
                 df = data.copy()
@@ -444,56 +706,86 @@ class DataStore:
                     batch = df.iloc[i:i+self.batch_size]
                     batch_size = len(batch)
                     
-                    try:
-                        # 逐行更新
-                        for _, row in batch.iterrows():
-                            # 构建更新条件
-                            conditions = and_(*[table.c[key] == row[key] for key in key_columns])
+                    # 逐行更新
+                    for _, row in batch.iterrows():
+                        try:
+                            # 构建WHERE条件
+                            where_clauses = []
+                            for key in key_columns:
+                                if key in row and key in table.columns:
+                                    where_clauses.append(table.c[key] == row[key])
+                            
+                            if not where_clauses:
+                                self.logger.warning(f"未找到有效的键列，跳过更新")
+                                failed += 1
+                                continue
                             
                             # 构建更新值
-                            values = {col: row[col] for col in row.index if col in table.columns and col not in key_columns}
+                            values = {}
+                            for col in row.index:
+                                if col in table.columns and col not in key_columns:
+                                    values[table.c[col]] = row[col]
+                            
+                            if not values:
+                                self.logger.warning(f"未找到需要更新的列，跳过更新")
+                                failed += 1
+                                continue
                             
                             # 执行更新
                             result = session.execute(
                                 table.update().
-                                where(conditions).
+                                where(and_(*where_clauses)).
                                 values(values)
                             )
                             
-                            # 检查更新结果
+                            # 提交事务
+                            session.commit()
+                            
+                            # 检查更新行数
                             if result.rowcount > 0:
-                                updated += result.rowcount
+                                updated += 1
                             else:
                                 failed += 1
-                        
-                        # 提交事务
-                        session.commit()
-                        
-                        self.logger.debug(f"批次 {i//self.batch_size + 1}/{(total_rows-1)//self.batch_size + 1} 更新完成: 成功 {updated}行, 失败 {failed}行")
-                        
-                    except Exception as e:
-                        # 回滚事务
-                        session.rollback()
-                        
-                        failed += batch_size
-                        self.logger.error(f"批次 {i//self.batch_size + 1}/{(total_rows-1)//self.batch_size + 1} 更新失败: {str(e)}")
+                                self.logger.debug(f"未找到匹配的记录，更新失败")
+                            
+                        except Exception as e:
+                            # 回滚事务
+                            session.rollback()
+                            
+                            failed += 1
+                            self.logger.debug(f"更新行数据失败: {str(e)}")
+                    
+                    self.logger.debug(f"批次 {i//self.batch_size + 1} 更新完成，总进度: {i+batch_size}/{total_rows}")
                 
-                result = {
-                    'success': failed == 0,
-                    'updated': updated,
-                    'failed': failed,
-                    'total': total_rows
+                self.logger.info(f"数据更新完成，成功: {updated} 行，失败: {failed} 行")
+                
+                return {
+                    'success': True,
+                    'operation': 'update',
+                    'table_name': table_name,
+                    'updated_count': updated,
+                    'failed_count': failed,
+                    'total_count': total_rows
                 }
                 
-                self.logger.info(f"数据更新完成，成功: {updated}行, 失败: {failed}行")
-                
-                return result
+            except DatabaseError:
+                # 重新抛出DatabaseError
+                raise
+            except Exception as e:
+                # 捕获所有其他异常
+                error_msg = f"数据更新失败: {table_name}"
+                self.logger.error(f"{error_msg}: {str(e)}")
+                raise DatabaseError(error_msg, details=str(e))
                 
             finally:
                 # 关闭会话
                 session.close()
                 
+        except DatabaseError:
+            # 重新抛出DatabaseError
+            raise
         except Exception as e:
+            # 捕获所有其他异常
             error_msg = f"数据更新失败: {table_name}"
             self.logger.error(f"{error_msg}: {str(e)}")
             raise DatabaseError(error_msg, details=str(e))
@@ -505,20 +797,23 @@ class DataStore:
         Args:
             data: 要插入或更新的数据DataFrame
             table_name: 表名
-            key_columns: 键列列表，用于标识记录
+            key_columns: 用于定位记录的键列列表
             metadata: 数据元信息
             
         Returns:
-            Dict[str, Any]: 操作结果
+            Dict[str, Any]: 插入或更新结果
             
         Raises:
-            DatabaseError: 数据操作失败
+            DatabaseError: 数据插入或更新失败
         """
         if data.empty:
-            self.logger.warning(f"要操作的数据为空，跳过操作")
+            self.logger.warning(f"要插入或更新的数据为空，跳过操作")
             return {'success': True, 'inserted': 0, 'updated': 0, 'failed': 0}
         
-        self.logger.info(f"开始对表 {table_name} 执行插入或更新操作，数据行数: {len(data)}")
+        if not key_columns:
+            raise ValueError("插入或更新操作必须指定键列")
+        
+        self.logger.info(f"开始插入或更新表 {table_name} 中的数据，数据行数: {len(data)}")
         
         try:
             # 创建会话
@@ -527,77 +822,261 @@ class DataStore:
             try:
                 # 反射表结构
                 try:
-                    table = Table(table_name, self.metadata, autoload_with=self.engine)
-                except (SQLAlchemyError, NoSuchTableError) as e:
-                    # 捕获表不存在的异常
-                    error_msg = str(e).lower()
-                    if any(msg in error_msg for msg in ["doesn't exist", "no such table", "unknown table", "table not found", "table or view does not exist"]):
-                        # 如果启用了自动建表，则创建表
-                        if self.auto_create_table:
-                            self.logger.info(f"表 {table_name} 不存在，将自动创建")
-                            table = self._create_table_from_dataframe(data, table_name, session)
-                            # 对于新建表，执行插入
-                            session.close()
-                            return self.insert_data(data, table_name, metadata)
-                        else:
-                            self.logger.error(f"表 {table_name} 不存在，且未启用自动建表")
-                            raise DatabaseError(f"表 {table_name} 不存在，且未启用自动建表")
+                    # 首先尝试清除元数据缓存，确保获取最新的表结构
+                    self.metadata.clear()
+                    self.logger.debug(f"已清除元数据缓存，准备反射表 {table_name} 结构")
+                    
+                    table = self._reflect_table_with_retry(table_name)
+                    self.logger.debug(f"表 {table_name} 已存在，使用现有表结构")
+                except NoSuchTableError:
+                    # 表不存在，根据自动建表设置决定创建表或抛出异常
+                    if self.auto_create_table:
+                        self.logger.info(f"表 {table_name} 不存在，将自动创建")
+                        table = self._create_table_from_dataframe(data, table_name, session)
                     else:
-                        # 其他SQLAlchemy错误
-                        raise DatabaseError(f"反射表结构失败: {str(e)}")
-                
-                # 查询已存在的数据
-                try:
-                    existing_data = self._query_existing_data(session, table, data, key_columns)
-                    self.logger.info(f"查询到已有数据: {len(existing_data)}行")
+                        self.logger.error(f"表 {table_name} 不存在，且未启用自动建表")
+                        raise DatabaseError(f"表 {table_name} 不存在，且未启用自动建表")
                 except Exception as e:
-                    # 如果查询失败，假设没有已存在的数据
-                    self.logger.warning(f"查询已有数据失败，假设没有已存在的数据: {str(e)}")
-                    existing_data = pd.DataFrame(columns=data.columns)
+                    # 捕获所有其他异常
+                    self.logger.error(f"反射表结构失败: {table_name}")
+                    raise DatabaseError(f"反射表结构失败: {table_name}", details=str(e))
                 
-                # 分离需要插入和更新的数据
-                to_insert, to_update = self._split_data_for_upsert(data, existing_data, key_columns)
+                # 检查并添加DataFrame中存在但表结构中不存在的列（自动schema演进）
+                self._ensure_columns_exist(table, data, table_name, session)
                 
-                self.logger.info(f"数据分离完成，需插入: {len(to_insert)}行, 需更新: {len(to_update)}行")
+                # 添加插入时间和更新时间
+                df = data.copy()
+                now = datetime.now()
                 
-                # 执行插入
-                insert_result = {'inserted': 0, 'failed': 0}
-                if not to_insert.empty:
-                    insert_result = self.insert_data(to_insert, table_name, metadata)
+                # 检查表是否有insert_time列
+                if 'insert_time' in table.columns and 'insert_time' not in df.columns:
+                    df['insert_time'] = now
                 
-                # 执行更新
-                update_result = {'updated': 0, 'failed': 0}
-                if not to_update.empty:
-                    update_result = self.update_data(to_update, table_name, key_columns, metadata)
+                # 检查表是否有update_time列
+                if 'update_time' in table.columns and 'update_time' not in df.columns:
+                    df['update_time'] = now
                 
-                # 合并结果
-                result = {
-                    'success': insert_result.get('success', True) and update_result.get('success', True),
-                    'inserted': insert_result.get('inserted', 0),
-                    'updated': update_result.get('updated', 0),
-                    'failed': insert_result.get('failed', 0) + update_result.get('failed', 0),
-                    'total': len(data)
+                # 将数据分批处理
+                total_rows = len(df)
+                inserted = 0
+                updated = 0
+                failed = 0
+                
+                for i in range(0, total_rows, self.batch_size):
+                    batch = df.iloc[i:i+self.batch_size]
+                    batch_size = len(batch)
+                    
+                    # 逐行处理
+                    for _, row in batch.iterrows():
+                        try:
+                            # 构建WHERE条件
+                            where_clauses = []
+                            for key in key_columns:
+                                if key in row and key in table.columns:
+                                    where_clauses.append(table.c[key] == row[key])
+                            
+                            if not where_clauses:
+                                self.logger.warning(f"未找到有效的键列，跳过操作")
+                                failed += 1
+                                continue
+                            
+                            # 查询是否存在匹配记录
+                            result = session.execute(
+                                select(func.count()).select_from(table).where(and_(*where_clauses))
+                            )
+                            count = result.scalar()
+                            
+                            if count > 0:
+                                # 记录存在，执行更新
+                                # 构建更新值
+                                values = {}
+                                for col in row.index:
+                                    if col in table.columns and col not in key_columns:
+                                        values[table.c[col]] = row[col]
+                                
+                                if not values:
+                                    self.logger.warning(f"未找到需要更新的列，跳过更新")
+                                    failed += 1
+                                    continue
+                                
+                                # 执行更新
+                                update_result = session.execute(
+                                    table.update().
+                                    where(and_(*where_clauses)).
+                                    values(values)
+                                )
+                                
+                                # 提交事务
+                                session.commit()
+                                
+                                # 检查更新行数
+                                if update_result.rowcount > 0:
+                                    updated += 1
+                                else:
+                                    failed += 1
+                                    self.logger.debug(f"更新失败")
+                            else:
+                                # 记录不存在，执行插入
+                                # 转换为字典
+                                record = row.to_dict()
+                                
+                                # 插入数据
+                                session.execute(table.insert(), [record])
+                                
+                                # 提交事务
+                                session.commit()
+                                
+                                inserted += 1
+                            
+                        except Exception as e:
+                            # 回滚事务
+                            session.rollback()
+                            
+                            failed += 1
+                            self.logger.debug(f"处理行数据失败: {str(e)}")
+                    
+                    self.logger.debug(f"批次 {i//self.batch_size + 1} 处理完成，总进度: {i+batch_size}/{total_rows}")
+                
+                self.logger.info(f"数据插入或更新完成，插入: {inserted} 行，更新: {updated} 行，失败: {failed} 行")
+                
+                return {
+                    'success': True,
+                    'operation': 'upsert',
+                    'table_name': table_name,
+                    'inserted_count': inserted,
+                    'updated_count': updated,
+                    'failed_count': failed,
+                    'total_count': total_rows
                 }
                 
-                self.logger.info(f"插入或更新操作完成，插入: {result['inserted']}行, 更新: {result['updated']}行, 失败: {result['failed']}行")
-                
-                return result
+            except DatabaseError:
+                # 重新抛出DatabaseError
+                raise
+            except Exception as e:
+                # 捕获所有其他异常
+                error_msg = f"数据插入或更新失败: {table_name}"
+                self.logger.error(f"{error_msg}: {str(e)}")
+                raise DatabaseError(error_msg, details=str(e))
                 
             finally:
                 # 关闭会话
                 session.close()
                 
+        except DatabaseError:
+            # 重新抛出DatabaseError
+            raise
         except Exception as e:
-            error_msg = f"插入或更新操作失败: {table_name}"
+            # 捕获所有其他异常
+            error_msg = f"数据插入或更新失败: {table_name}"
             self.logger.error(f"{error_msg}: {str(e)}")
             raise DatabaseError(error_msg, details=str(e))
     
-    def _create_table_from_dataframe(self, data: pd.DataFrame, table_name: str, session: Session) -> Table:
+    def delete_data(self, table_name: str, conditions: Dict[str, Any]) -> Dict[str, Any]:
         """
-        根据DataFrame创建表
+        删除数据
         
         Args:
-            data: 数据DataFrame
+            table_name: 表名
+            conditions: 删除条件，格式为 {列名: 值} 或 {列名: [值1, 值2, ...]}
+            
+        Returns:
+            Dict[str, Any]: 删除结果
+            
+        Raises:
+            DatabaseError: 数据删除失败
+        """
+        if not conditions:
+            raise ValueError("删除操作必须指定条件，禁止无条件删除")
+        
+        self.logger.info(f"开始删除表 {table_name} 中的数据，条件: {conditions}")
+        
+        try:
+            # 创建会话
+            session = self.Session()
+            
+            try:
+                # 反射表结构
+                try:
+                    # 首先尝试清除元数据缓存，确保获取最新的表结构
+                    self.metadata.clear()
+                    self.logger.debug(f"已清除元数据缓存，准备反射表 {table_name} 结构")
+                    
+                    table = self._reflect_table_with_retry(table_name)
+                except NoSuchTableError:
+                    # 表不存在，抛出异常
+                    self.logger.error(f"表 {table_name} 不存在，无法删除数据")
+                    raise DatabaseError(f"表 {table_name} 不存在，无法删除数据")
+                except Exception as e:
+                    # 捕获所有其他异常
+                    self.logger.error(f"反射表结构失败: {table_name}")
+                    raise DatabaseError(f"反射表结构失败: {table_name}", details=str(e))
+                
+                # 构建WHERE条件
+                where_clauses = []
+                for column, value in conditions.items():
+                    if column not in table.columns:
+                        self.logger.warning(f"列 {column} 不存在于表 {table_name} 中，跳过该条件")
+                        continue
+                        
+                    if isinstance(value, list):
+                        # 如果值是列表，使用IN操作符
+                        where_clauses.append(table.c[column].in_(value))
+                    else:
+                        # 否则使用等于操作符
+                        where_clauses.append(table.c[column] == value)
+                
+                if not where_clauses:
+                    self.logger.error(f"未找到有效的条件列，禁止无条件删除")
+                    raise DatabaseError(f"未找到有效的条件列，禁止无条件删除")
+                
+                # 执行删除
+                result = session.execute(
+                    table.delete().where(and_(*where_clauses))
+                )
+                
+                # 提交事务
+                session.commit()
+                
+                # 获取删除行数
+                deleted = result.rowcount
+                
+                self.logger.info(f"数据删除完成，删除: {deleted} 行")
+                
+                return {
+                    'success': True,
+                    'operation': 'delete',
+                    'table_name': table_name,
+                    'deleted_count': deleted
+                }
+                
+            except DatabaseError:
+                # 重新抛出DatabaseError
+                raise
+            except Exception as e:
+                # 捕获所有其他异常
+                error_msg = f"数据删除失败: {table_name}"
+                self.logger.error(f"{error_msg}: {str(e)}")
+                raise DatabaseError(error_msg, details=str(e))
+                
+            finally:
+                # 关闭会话
+                session.close()
+                
+        except DatabaseError:
+            # 重新抛出DatabaseError
+            raise
+        except Exception as e:
+            # 捕获所有其他异常
+            error_msg = f"数据删除失败: {table_name}"
+            self.logger.error(f"{error_msg}: {str(e)}")
+            raise DatabaseError(error_msg, details=str(e))
+    
+    def _create_table_from_dataframe(self, df: pd.DataFrame, table_name: str, session) -> Table:
+        """
+        从DataFrame创建表
+        
+        Args:
+            df: 数据DataFrame
             table_name: 表名
             session: 数据库会话
             
@@ -607,33 +1086,34 @@ class DataStore:
         Raises:
             DatabaseError: 创建表失败
         """
-        self.logger.info(f"开始根据DataFrame创建表 {table_name}")
-        
         try:
-            # 创建表对象
-            table = Table(table_name, self.metadata)
+            self.logger.info(f"从DataFrame创建表 {table_name}")
             
-            # 添加主键
-            if self.auto_create_table_options.get('add_primary_key', True):
-                table.append_column(Column('id', Integer, primary_key=True, autoincrement=True))
+            # 创建列定义
+            columns = []
             
-            # 添加数据列
-            for column_name, dtype in data.dtypes.items():
-                # 获取SQLAlchemy类型
-                column_type = self._get_sqlalchemy_type(data[column_name], dtype)
+            # 添加自增主键
+            columns.append(Column('id', Integer, primary_key=True))
+            
+            # 根据DataFrame的数据类型创建列
+            for col_name, dtype in df.dtypes.items():
+                # 跳过已添加的列
+                if col_name == 'id':
+                    continue
                 
-                # 添加列
-                table.append_column(Column(column_name, column_type))
+                # 根据数据类型映射到SQLAlchemy类型
+                col_type = self._map_dtype_to_sqlalchemy(dtype)
+                
+                # 创建列
+                column = Column(col_name, col_type)
+                columns.append(column)
             
-            # 添加插入时间列
-            if self.auto_create_table_options.get('add_insert_time', True):
-                table.append_column(Column('insert_time', DateTime, default=func.now()))
-            
-            # 添加更新时间列
-            if self.auto_create_table_options.get('add_update_time', True):
-                table.append_column(Column('update_time', DateTime, default=func.now(), onupdate=func.now()))
+            # 添加时间戳列
+            columns.append(Column('insert_time', DateTime))
+            columns.append(Column('update_time', DateTime))
             
             # 创建表
+            table = Table(table_name, self.metadata, *columns)
             table.create(self.engine)
             
             self.logger.info(f"表 {table_name} 创建成功")
@@ -644,178 +1124,100 @@ class DataStore:
             error_msg = f"创建表失败: {table_name}"
             self.logger.error(f"{error_msg}: {str(e)}")
             raise DatabaseError(error_msg, details=str(e))
-    
-    def _get_sqlalchemy_type(self, series: pd.Series, dtype) -> Any:
+            
+    def _ensure_columns_exist(self, table: Table, df: pd.DataFrame, table_name: str, session) -> None:
         """
-        根据pandas数据类型获取对应的SQLAlchemy类型
+        确保DataFrame中的所有列都存在于表结构中，如果不存在则自动添加
         
         Args:
-            series: 数据列
-            dtype: pandas数据类型
+            table: 表对象
+            df: 数据DataFrame
+            table_name: 表名
+            session: 数据库会话
+            
+        Raises:
+            DatabaseError: 添加列失败
+        """
+        try:
+            # 获取表中已有的列名
+            existing_columns = set(column.name for column in table.columns)
+            
+            # 获取DataFrame中的列名
+            df_columns = set(df.columns)
+            
+            # 找出需要添加的列
+            missing_columns = df_columns - existing_columns
+            
+            if missing_columns:
+                self.logger.info(f"检测到表 {table_name} 缺少以下列: {missing_columns}，将自动添加")
+                
+                # 为每个缺失的列执行ALTER TABLE ADD COLUMN
+                for col_name in missing_columns:
+                    # 获取列的数据类型
+                    dtype = df[col_name].dtype
+                    col_type = self._map_dtype_to_sqlalchemy(dtype)
+                    col_type_ddl = self._compile_sql_type_for_ddl(col_type)
+
+                    preparer = self.engine.dialect.identifier_preparer
+                    quoted_table_name = preparer.quote(table_name)
+                    quoted_col_name = preparer.quote(col_name)
+                    
+                    # 构建ALTER TABLE语句
+                    alter_stmt = f"ALTER TABLE {quoted_table_name} ADD COLUMN {quoted_col_name} {col_type_ddl}"
+                    
+                    self.logger.info(f"执行: {alter_stmt}")
+                    
+                    # 执行ALTER TABLE语句
+                    session.execute(text(alter_stmt))
+                    session.commit()
+                
+                # 清除元数据缓存并重新反射表结构
+                self.metadata.clear()
+                table = self._reflect_table_with_retry(table_name)
+                
+                self.logger.info(f"表 {table_name} 结构已更新，新增 {len(missing_columns)} 列")
+                
+        except Exception as e:
+            error_msg = f"添加列失败: {table_name}"
+            self.logger.error(f"{error_msg}: {str(e)}")
+            raise DatabaseError(error_msg, details=str(e))
+    
+    def _map_mysql_type_to_sqlalchemy(self, type_str: str) -> Any:
+        """
+        将MySQL类型字符串映射到SQLAlchemy类型
+        
+        Args:
+            type_str: MySQL类型字符串
             
         Returns:
             Any: SQLAlchemy类型
         """
-        # 处理整数类型
-        if pd.api.types.is_integer_dtype(dtype):
-            try:
-                # 检查数值范围
-                min_val = series.min()
-                max_val = series.max()
-                
-                # 如果有NaN，min和max会返回NaN
-                if pd.isna(min_val) or pd.isna(max_val):
-                    # 无法确定范围，保守使用BIGINT
-                    self.logger.info(f"列 {series.name} 包含NaN值，无法确定范围，使用BIGINT类型")
-                    return sqlalchemy.BIGINT
-                
-                # 检查是否超出INT范围
-                if min_val < -2147483648 or max_val > 2147483647:
-                    self.logger.info(f"列 {series.name} 的值超出INT范围 (最小值: {min_val}, 最大值: {max_val})，使用BIGINT类型")
-                    return sqlalchemy.BIGINT
-                else:
-                    return Integer
-            except Exception as e:
-                # 如果无法确定范围，保守使用BIGINT
-                self.logger.warning(f"无法确定列 {series.name} 的范围: {str(e)}，使用BIGINT类型")
-                return sqlalchemy.BIGINT
+        type_str = type_str.lower()
         
-        # 处理浮点类型
-        elif pd.api.types.is_float_dtype(dtype):
-            try:
-                # 检查数值范围
-                series_no_na = series.dropna()
-                if series_no_na.empty:
-                    return Float
-                
-                max_abs = max(abs(series_no_na.min()), abs(series_no_na.max()))
-                
-                # 检查小数位数
-                decimal_places = series.apply(lambda x: len(str(x).split('.')[-1]) if pd.notna(x) and '.' in str(x) else 0).max()
-                
-                # 如果数值非常大或精度要求高，使用Numeric
-                if max_abs > 1e10 or decimal_places > 6:
-                    # 确定合适的精度和小数位数
-                    precision = min(max(len(str(int(max_abs))) + decimal_places, 15), 38)
-                    scale = min(decimal_places, 10)
-                    self.logger.info(f"列 {series.name} 需要高精度 (最大绝对值: {max_abs}, 小数位数: {decimal_places})，使用Numeric({precision},{scale})类型")
-                    return Numeric(precision, scale)
-                else:
-                    return Float
-            except Exception:
-                # 如果无法确定范围，使用标准Float
-                return Float
-        
-        # 处理日期时间类型
-        elif pd.api.types.is_datetime64_dtype(dtype):
+        if 'int' in type_str:
+            return Integer
+        elif 'float' in type_str or 'double' in type_str or 'decimal' in type_str:
+            return Float
+        elif 'datetime' in type_str:
             return DateTime
-        
-        # 处理布尔类型
-        elif pd.api.types.is_bool_dtype(dtype):
-            return Boolean
-        
-        # 处理字符串类型
-        elif pd.api.types.is_string_dtype(dtype) or pd.api.types.is_object_dtype(dtype):
-            try:
-                # 估计字符串长度
-                max_length = series.astype(str).str.len().max()
-                # 设置一个合理的默认长度，避免过短或过长
-                length = min(max(max_length * 2, 50), 255)
-                
-                # 如果字符串非常长，考虑使用Text类型
-                if max_length > 255:
-                    self.logger.info(f"列 {series.name} 包含长文本 (最大长度: {max_length})，使用Text类型")
-                    from sqlalchemy import Text
-                    return Text
-                else:
-                    return String(length)
-            except Exception:
-                # 如果无法确定长度，使用默认String(255)
+        elif 'date' in type_str:
+            return DateTime
+        elif 'time' in type_str:
+            return String(20)
+        elif 'char' in type_str or 'text' in type_str:
+            # 提取长度
+            import re
+            match = re.search(r'\((\d+)\)', type_str)
+            if match:
+                length = int(match.group(1))
+                return String(length)
+            elif 'text' in type_str:
+                return Text
+            else:
                 return String(255)
-        
-        # 其他类型默认为字符串
+        elif 'blob' in type_str:
+            return Text
+        elif 'bool' in type_str:
+            return Boolean
         else:
             return String(255)
-    
-    def _query_existing_data(self, session, table: Table, data: pd.DataFrame, key_columns: List[str]) -> pd.DataFrame:
-        """
-        查询已存在的数据
-        
-        Args:
-            session: 数据库会话
-            table: 表对象
-            data: 数据DataFrame
-            key_columns: 键列列表
-            
-        Returns:
-            pd.DataFrame: 已存在的数据DataFrame
-        """
-        # 提取键列值
-        key_values = {}
-        for key in key_columns:
-            key_values[key] = data[key].unique().tolist()
-        
-        # 构建查询条件
-        conditions = []
-        for key, values in key_values.items():
-            conditions.append(table.c[key].in_(values))
-        
-        # 查询数据
-        query = select([table]).where(or_(*conditions))
-        
-        try:
-            result = session.execute(query)
-            
-            # 转换为DataFrame
-            df = pd.DataFrame(result.fetchall(), columns=result.keys())
-            
-            return df
-        except Exception as e:
-            # 捕获所有可能的SQL执行错误
-            error_str = str(e).lower()
-            if any(msg in error_str for msg in ["doesn't exist", "no such table", "unknown table", "table not found", "table or view does not exist"]):
-                self.logger.warning(f"查询表 {table.name} 失败，表可能不存在: {str(e)}，返回空DataFrame")
-                return pd.DataFrame(columns=data.columns)
-            else:
-                self.logger.error(f"查询已存在数据失败: {str(e)}")
-                raise
-    
-    def _split_data_for_upsert(self, data: pd.DataFrame, existing_data: pd.DataFrame, key_columns: List[str]) -> Tuple[pd.DataFrame, pd.DataFrame]:
-        """
-        分离需要插入和更新的数据
-        
-        Args:
-            data: 新数据DataFrame
-            existing_data: 已存在的数据DataFrame
-            key_columns: 键列列表
-            
-        Returns:
-            Tuple[pd.DataFrame, pd.DataFrame]: (需要插入的数据, 需要更新的数据)
-        """
-        if existing_data.empty:
-            # 如果没有已存在的数据，全部插入
-            return data, pd.DataFrame(columns=data.columns)
-        
-        # 创建键列组合
-        def create_key(row):
-            return tuple(row[key] for key in key_columns)
-        
-        # 创建已存在数据的键集合
-        existing_keys = set(create_key(row) for _, row in existing_data.iterrows())
-        
-        # 分离需要插入和更新的数据
-        to_insert = []
-        to_update = []
-        
-        for _, row in data.iterrows():
-            key = create_key(row)
-            if key in existing_keys:
-                to_update.append(row)
-            else:
-                to_insert.append(row)
-        
-        # 转换为DataFrame
-        to_insert_df = pd.DataFrame(to_insert, columns=data.columns) if to_insert else pd.DataFrame(columns=data.columns)
-        to_update_df = pd.DataFrame(to_update, columns=data.columns) if to_update else pd.DataFrame(columns=data.columns)
-        
-        return to_insert_df, to_update_df

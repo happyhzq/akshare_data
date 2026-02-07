@@ -1,16 +1,13 @@
 
 #示例管道配置文件，用于获取A股历史数据
 
-pipeline_id: "stock_zh_a_hist_pipeline"
+pipeline_id: "stock_us_hist_min_em"
 fetcher_type: "akshare"
-interface_name: "ak_stock_zh_a_hist"
+interface_name: "stock_us_hist_min_em"
 interface_params:
-  symbol: "000001"  # 平安银行
-  period: "daily"
-  start_date: "20230101"
-  end_date: "20231231"
-  adjust: "qfq"  # 前复权
-
+  symbol: "105.SNDK"  # 平安银行
+  symbol: "105.WDC"
+  
 cleaner_type: "standard"
 cleaner_config:
   column_mapping:

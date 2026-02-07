@@ -1,0 +1,21 @@
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs / runtime artifacts
+logs/
+*.log
+
+# Local configs / secrets
+config.yaml
+config.local.yaml
+*.env
+.env
+
+# IDE
+.vscode/

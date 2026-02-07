@@ -1,6 +1,0 @@
-2025-06-01 11:55:09,814 - TaskExecutor - INFO - 开始执行数据管道: pipeline_index_us_stock_sina_20250601115509
-2025-06-01 11:55:09,814 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250601115509_fetch, 类型: DataFetchTask
-2025-06-01 11:55:10,511 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250601115509_process, 类型: DataProcessTask
-2025-06-01 11:55:10,517 - TaskExecutor - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250601115509_compare, 类型: DataCompareTask
-2025-06-01 11:55:10,544 - TaskExecutor - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250601115509_compare, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250601115509_compare
-2025-06-01 11:55:10,544 - TaskExecutor - ERROR - 数据管道执行失败: pipeline_index_us_stock_sina_20250601115509, 错误: 任务执行失败: pipeline_index_us_stock_sina_20250601115509_compare

@@ -1,8 +1,0 @@
-2025-06-01 11:55:09,449 - AkShareFetcher - INFO - 初始化AkShare接口信息
-2025-06-01 11:55:09,803 - AkShareFetcher - WARNING - 扫描模块时出错: 连接异常, 请检查您的Token是否过期和输入的参数是否正确
-2025-06-01 11:55:09,813 - AkShareFetcher - INFO - 发现2259个AkShare接口函数
-2025-06-01 11:55:09,814 - AkShareFetcher - INFO - 初始化AkShare接口信息
-2025-06-01 11:55:10,164 - AkShareFetcher - WARNING - 扫描模块时出错: 连接异常, 请检查您的Token是否过期和输入的参数是否正确
-2025-06-01 11:55:10,170 - AkShareFetcher - INFO - 发现2259个AkShare接口函数
-2025-06-01 11:55:10,170 - AkShareFetcher - INFO - 开始获取数据: index_us_stock_sina, 参数: {'symbol': '.IXIC'}
-2025-06-01 11:55:10,510 - AkShareFetcher - INFO - 数据获取成功: index_us_stock_sina, 行数: 5387, 列数: 7

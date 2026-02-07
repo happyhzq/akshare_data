@@ -59,46 +59,68 @@ class AkShareFetcher(BaseFetcher):
             prefix: 函数名前缀
         """
         try:
-            # 扫描当前模块中的函数
+            # 扫描当前模块中的函数，只获取函数签名而不执行
             for name in dir(module):
                 if name.startswith('_'):
                     continue
-                    
-                obj = getattr(module, name)
-                full_name = f"{prefix}{name}" if prefix else name
                 
-                if callable(obj) and not inspect.isclass(obj) and not inspect.ismodule(obj):
-                    # 避免重复添加
-                    if full_name not in functions_dict:
-                        functions_dict[full_name] = obj
+                try:
+                    # 使用getattr获取属性，但捕获可能的异常
+                    obj = getattr(module, name)
+                    full_name = f"{prefix}{name}" if prefix else name
                     
-            # 扫描子模块
+                    # 只检查是否可调用，不尝试执行函数
+                    if callable(obj) and not inspect.isclass(obj) and not inspect.ismodule(obj):
+                        # 避免重复添加
+                        if full_name not in functions_dict:
+                            functions_dict[full_name] = obj
+                except Exception:
+                    # 忽略获取属性时的错误，继续扫描其他函数
+                    continue
+                    
+            # 扫描子模块，但避免触发实际网络请求
             if hasattr(module, '__path__'):
                 for _, submodule_name, is_pkg in pkgutil.iter_modules(module.__path__):
                     try:
-                        # 避免循环导入
+                        # 避免循环导入和触发网络请求
                         if f"{module.__name__}.{submodule_name}" in sys.modules:
                             submodule = sys.modules[f"{module.__name__}.{submodule_name}"]
+                            
+                            # 递归扫描已加载的子模块
+                            if is_pkg:
+                                new_prefix = f"{prefix}{submodule_name}." if prefix else f"{submodule_name}."
+                                self._scan_module(submodule, functions_dict, new_prefix)
+                            else:
+                                # 扫描非包模块中的函数
+                                for func_name in dir(submodule):
+                                    if func_name.startswith('_'):
+                                        continue
+                                    
+                                    try:
+                                        func_obj = getattr(submodule, func_name)
+                                        if callable(func_obj) and not inspect.isclass(func_obj) and not inspect.ismodule(func_obj):
+                                            full_func_name = f"{submodule_name}.{func_name}"
+                                            if full_func_name not in functions_dict:
+                                                functions_dict[full_func_name] = func_obj
+                                    except Exception:
+                                        # 忽略获取属性时的错误
+                                        continue
                         else:
-                            submodule = importlib.import_module(f"{module.__name__}.{submodule_name}")
-                        
-                        # 递归扫描子模块
-                        if is_pkg:
-                            new_prefix = f"{prefix}{submodule_name}." if prefix else f"{submodule_name}."
-                            self._scan_module(submodule, functions_dict, new_prefix)
-                        else:
-                            # 扫描非包模块中的函数
-                            for func_name in dir(submodule):
-                                if func_name.startswith('_'):
-                                    continue
-                                
-                                func_obj = getattr(submodule, func_name)
-                                if callable(func_obj) and not inspect.isclass(func_obj) and not inspect.ismodule(func_obj):
-                                    full_func_name = f"{submodule_name}.{func_name}"
-                                    if full_func_name not in functions_dict:
-                                        functions_dict[full_func_name] = func_obj
+                            # 对于未加载的模块，尝试安全导入但不执行初始化代码
+                            try:
+                                # 仅记录模块名称，不实际导入可能触发网络请求的模块
+                                full_module_name = f"{module.__name__}.{submodule_name}"
+                                if is_pkg:
+                                    # 只添加模块名称作为前缀，不实际导入
+                                    new_prefix = f"{prefix}{submodule_name}." if prefix else f"{submodule_name}."
+                                    # 记录模块名但不递归扫描未加载模块
+                                    self.logger.debug(f"跳过未加载模块的扫描: {full_module_name}")
+                            except Exception:
+                                # 忽略导入错误
+                                pass
                     except (ImportError, AttributeError) as e:
-                        self.logger.warning(f"扫描子模块 {submodule_name} 时出错: {str(e)}")
+                        # 记录警告但继续扫描其他模块
+                        self.logger.debug(f"扫描子模块 {submodule_name} 时出错: {str(e)}")
         except Exception as e:
             self.logger.warning(f"扫描模块时出错: {str(e)}")
     

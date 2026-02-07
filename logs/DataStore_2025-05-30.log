@@ -1,2 +1,0 @@
-2025-05-30 22:13:04,960 - DataStore - INFO - 开始查询表 raw_index_us_stock_sina 中的数据
-2025-05-30 22:13:04,972 - DataStore - ERROR - 数据查询失败: raw_index_us_stock_sina

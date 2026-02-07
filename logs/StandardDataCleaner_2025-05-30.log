@@ -1,4 +1,0 @@
-2025-05-30 22:08:10,595 - StandardDataCleaner - INFO - 开始清洗数据，原始数据形状: (5389, 7)
-2025-05-30 22:08:10,600 - StandardDataCleaner - INFO - 数据清洗完成，清洗后数据形状: (5389, 7)
-2025-05-30 22:13:04,951 - StandardDataCleaner - INFO - 开始清洗数据，原始数据形状: (5389, 7)
-2025-05-30 22:13:04,954 - StandardDataCleaner - INFO - 数据清洗完成，清洗后数据形状: (5389, 7)

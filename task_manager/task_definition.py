@@ -264,6 +264,7 @@ class DataCompareTask(BaseTask):
         from data_storage.data_store import DataStore
         import pandas as pd
         from core.exceptions import DatabaseError
+        from sqlalchemy.exc import SQLAlchemyError, NoSuchTableError
         
         self.logger.info(f"开始比对数据，表: {self.table_name}, 新数据行数: {len(self.new_data)}")
         
@@ -281,19 +282,31 @@ class DataCompareTask(BaseTask):
         for key in self.key_columns:
             if key in self.new_data.columns:
                 conditions[key] = self.new_data[key].unique().tolist()
-        
+
         # 查询已有数据，处理表不存在的情况
         try:
             existing_data = data_store.query_data(self.table_name, conditions)
             self.logger.info(f"查询到已有数据: {len(existing_data)}行")
-        except DatabaseError as e:
-            # 如果是表不存在错误，则使用空DataFrame
-            if "表不存在" in str(e):
-                self.logger.warning(f"表 {self.table_name} 不存在，这可能是首次运行。将使用空DataFrame进行比对。")
+        except (DatabaseError, SQLAlchemyError, NoSuchTableError) as e:
+            # 捕获所有可能的数据库错误
+            error_str = str(e).lower()
+            table_not_exists = any(msg in error_str for msg in [
+                "表不存在", "doesn't exist", "no such table", "unknown table", 
+                "table not found", "table or view does not exist", "反射表结构失败"
+            ])
+            
+            if table_not_exists:
+                self.logger.warning(f"表 {self.table_name} 不存在或无法访问，这可能是首次运行或表已被删除。将使用空DataFrame进行比对。")
                 existing_data = pd.DataFrame(columns=self.new_data.columns)
             else:
                 # 其他数据库错误，继续抛出
+                self.logger.error(f"查询数据时发生未预期的错误: {str(e)}")
                 raise
+        except Exception as e:
+            # 捕获所有其他异常，确保流程不中断
+            self.logger.error(f"查询数据时发生未知错误: {str(e)}")
+            self.logger.warning(f"由于错误，将使用空DataFrame进行比对，确保流程不中断")
+            existing_data = pd.DataFrame(columns=self.new_data.columns)
         
         # 创建数据比对器
         comparator = DataComparator(self.comparator_config)

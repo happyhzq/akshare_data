@@ -88,7 +88,7 @@ class DataComparator:
             # 找出需要插入的数据（在新数据中但不在已有数据中）
             to_insert_mask = ~new_data['_key'].isin(existing_data['_key'])
             to_insert = new_data[to_insert_mask].copy()
-            
+
             # 找出可能需要更新的数据（在新数据中也在已有数据中）
             to_check_update = new_data[~to_insert_mask].copy()
             
@@ -124,9 +124,26 @@ class DataComparator:
                 # 检查是否有差异
                 has_diff = False
                 for col in compare_columns:
-                    if col in existing_row and row[col] != existing_row[col]:
-                        has_diff = True
-                        break
+                    if col not in existing_row:
+                        continue
+                        
+                    # 对浮点数使用近似比较
+                    if pd.api.types.is_float_dtype(pd.Series([row[col]])) or pd.api.types.is_float_dtype(pd.Series([existing_row[col]])):
+                        try:
+                            # 允许0.000001的误差（可根据实际情况调整）
+                            if abs(float(row[col]) - float(existing_row[col])) > 0.000001:
+                                has_diff = True
+                                break
+                        except (ValueError, TypeError):
+                            # 处理无法转换为浮点数的情况
+                            if row[col] != existing_row[col]:
+                                has_diff = True
+                                break
+                    else:
+                        # 其他类型使用精确比较
+                        if row[col] != existing_row[col]:
+                            has_diff = True
+                            break
                 
                 if has_diff:
                     to_update_rows.append(row)
@@ -143,7 +160,7 @@ class DataComparator:
             unchanged = unchanged.drop(columns=['_key']) if not unchanged.empty else unchanged
             
             self.logger.info(f"数据比对完成，需插入: {len(to_insert)}行, 需更新: {len(to_update)}行, 无需变更: {len(unchanged)}行")
-            
+            print(to_update)
             return {
                 'to_insert': to_insert,
                 'to_update': to_update,
@@ -176,17 +193,42 @@ class DataComparator:
     
     def _create_composite_key(self, df: pd.DataFrame, keys: List[str]) -> pd.Series:
         """
-        创建组合键
-        
-        Args:
-            df: 数据DataFrame
-            keys: 键列列表
-            
-        Returns:
-            pd.Series: 组合键Series
+        创建组合键，使用更健壮的浮点数处理
         """
+        # 创建一个临时DataFrame用于生成键
+        key_df = df[keys].copy()
+        
+        # 对所有列进行标准化处理
+        for col in keys:
+            # 尝试将所有值转换为浮点数并格式化，无论列的原始类型如何
+            try:
+                # 先检查列是否包含可以转换为浮点数的值
+                can_convert_to_float = True
+                for val in df[col].dropna().unique():
+                    try:
+                        float(val)
+                    except (ValueError, TypeError):
+                        can_convert_to_float = False
+                        break
+                
+                if can_convert_to_float:
+                    # 如果所有值都可以转换为浮点数，则进行标准化格式化
+                    key_df[col] = df[col].apply(
+                        lambda x: f"{float(x):.8f}" if pd.notnull(x) and x != "" else ""
+                    )
+                    self.logger.debug(f"列 {col} 被识别为数值列，已进行浮点数标准化")
+                else:
+                    # 否则保持原样
+                    key_df[col] = df[col]
+                    self.logger.debug(f"列 {col} 被识别为非数值列，保持原样")
+            except Exception as e:
+                # 如果处理过程中出错，保持原样
+                self.logger.warning(f"处理列 {col} 时出错: {str(e)}，保持原样")
+                key_df[col] = df[col]
+        
         # 将所有键列转换为字符串并连接
-        return df[keys].astype(str).agg('|'.join, axis=1)
+        return key_df.astype(str).agg('|'.join, axis=1)
+
     
     def batch_compare(self, new_data: pd.DataFrame, get_existing_data_func: callable, table_name: str) -> Dict[str, pd.DataFrame]:
         """

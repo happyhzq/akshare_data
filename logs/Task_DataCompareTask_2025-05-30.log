@@ -1,4 +1,0 @@
-2025-05-30 22:13:04,955 - Task_DataCompareTask - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250530221304_compare
-2025-05-30 22:13:04,955 - Task_DataCompareTask - INFO - 开始比对数据，表: raw_index_us_stock_sina, 新数据行数: 5389
-2025-05-30 22:13:04,972 - Task_DataCompareTask - ERROR - 任务执行失败: pipeline_index_us_stock_sina_20250530221304_compare, 错误: 数据查询失败: raw_index_us_stock_sina
-2025-05-30 22:13:04,972 - Task_DataCompareTask - INFO - 任务执行耗时: 0.02秒

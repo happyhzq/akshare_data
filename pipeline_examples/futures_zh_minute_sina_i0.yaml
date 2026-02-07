@@ -1,0 +1,80 @@
+
+#管道配置文件，用于获取大连期货交易所铁矿石数据
+
+pipeline_id: "futures_zh_minute_sina_RB0"
+fetcher_type: "akshare"
+interface_name: "futures_zh_minute_sina"
+interface_params:
+  symbol: "I0"  # 铁矿石 
+  period: "1"   # 1分钟数据
+  
+
+cleaner_type: "standard"
+cleaner_config:
+  column_mapping:
+    "datetime": "trade_datetime"
+    "open": "open_price"
+    "close": "close_price"
+    "high": "high_price"
+    "low": "low_price"
+    "volume": "volume"
+    "amount": "amount"
+  date_columns: ["trade_datetime"]
+  numeric_columns: ["open_price", "close_price", "high_price", "low_price", "volume", "amount"]
+  fill_na: true
+  na_values: ["-", "N/A", "n/a", "null", "NULL", "None", ""]
+  add_params_as_columns: true
+
+transformer_config:
+  schema_mapping:
+    "ak_stock_zh_a_hist":
+      table_name: "raw_futures_zh_minute_sina"
+      interface_id: 3
+      "datetime": "trade_datetime"
+      "open": "open_price"
+      "close": "close_price"
+      "high": "high_price"
+      "low": "low_price"
+      "volume": "volume"
+      "amount": "amount"
+
+
+comparator_config:
+  #key_columns:
+    #"raw_futures_zh_minute_sina": ["trade_datetime", "param_symbol", "param_period"]
+  #compare_all_columns: false
+  enable_diff_logging: true  # 是否启用差异记录
+  diff_log_table: "data_comparison_diff_log"  # 差异记录表名
+  exclude_columns:  # 比对时排除的列
+    - "insert_time"
+    - "update_time"
+    - "created_at"
+    - "updated_at"
+  # 可以针对特定表设置排除列
+  table_exclude_columns:
+    raw_stock_us_daily:
+      - "volume"  # 例如排除volume列
+
+store_config:
+  batch_size: 1000
+  retry_count: 3
+  unique_constraints:
+    "raw_futures_zh_minute_sina": ["trade_date", "param_symbol","param_period"]
+
+# 键列配置（用于比对和更新）
+key_columns:
+  "stock_market_data": ["trade_datetime", "stock_code"]
+  "macro_economic_indicators": ["data_datetime", "indicator_name", "country"]
+  "forex_exchange_rates": ["rate_date", "currency_pair"]
+  "raw_stock_us_daily": ["trade_datetime", "param_symbol", "param_adjust"]
+  #"raw_stock_us_daily": ["date", "open", "high", "low", "close", "param_symbol", "param_adjust"]
+  "raw_futures_zh_minute_sina": ["trade_datetime", "param_symbol", "param_period"]
+  "raw_stock_us_hist_min_em": ["trade_datetime", "param_symbol"]
+
+# 唯一约束配置（用于防止重复插入）
+unique_constraints:
+  "stock_market_data": ["trade_datetime", "stock_code"]
+  "macro_economic_indicators": ["data_datetime", "indicator_name", "country", "frequency"]
+  "forex_exchange_rates": ["rate_date", "rate_time", "currency_pair", "source"]
+  "raw_futures_zh_minute_sina": ["trade_datetime", "param_symbol", "param_period"]
+  "raw_stock_us_hist_min_em": ["trade_datetime", "param_symbol"]

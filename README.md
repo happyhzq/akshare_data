@@ -102,6 +102,30 @@ python main.py --config config.yaml --list-interfaces
 python main.py --config config.yaml --search 股票
 ```
 
+### 5. 常用指令
+
+```bash
+
+python main.py --config config.yaml --interface futures_zh_minute_sina --params '{"symbol": "I0", "period": "1"}'
+
+python main.py --config config.yaml --interface futures_zh_minute_sina --params '{"symbol": "SR0", "period": "1"}'
+
+python main.py --config config.yaml --interface futures_zh_minute_sina --params '{"symbol": "SP0", "period": "1"}'
+
+
+python main.py --config config.yaml --interface stock_us_hist_min_em --params '{"symbol": "105.SNDK"}'
+
+python main.py --config config.yaml --interface stock_us_hist_min_em --params '{"symbol": "105.WDC"}'
+
+python main.py --config config.yaml --interface stock_us_hist_min_em --params '{"symbol": "105.INTC"}'
+
+python main.py --config config.yaml --interface stock_us_hist_min_em --params '{"symbol": "105.SRPT"}'
+
+python main.py --config config.yaml --interface stock_us_hist_min_em --params '{"symbol": "105.GOOG"}'
+
+```
+
+
 ## 自动化执行
 
 由于系统不支持内置的定时任务功能，建议以下替代方案：

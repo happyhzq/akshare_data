@@ -95,6 +95,11 @@ class TaskExecutor:
             raw_data = fetch_result['result']['data']
             metadata = fetch_result['result']['metadata']
             
+            # 确保metadata中包含interface_params，用于参数注入
+            if 'interface_params' not in metadata and pipeline_config.get('interface_params'):
+                metadata['interface_params'] = pipeline_config.get('interface_params', {})
+                self.logger.info(f"已将接口参数添加到metadata: {metadata['interface_params']}")
+            
             # 2. 数据处理任务
             process_task_id = f"{pipeline_id}_process"
             
@@ -115,6 +120,7 @@ class TaskExecutor:
             
             # 获取处理后的数据
             processed_data = process_result['result']['table_data']
+            print(processed_data)
             table_name = process_result['result']['table_name']
             updated_metadata = process_result['result']['metadata']
             

@@ -1,4 +1,0 @@
-2025-05-29 16:09:00,943 - DataTransformer - INFO - 开始转换数据，数据形状: (8162, 12)
-2025-05-29 16:09:00,943 - DataTransformer - ERROR - 数据转换失败: 未找到接口 stock_zh_a_hist 的模式映射
-2025-05-29 21:25:15,954 - DataTransformer - INFO - 开始转换数据，数据形状: (8162, 12)
-2025-05-29 21:25:15,955 - DataTransformer - ERROR - 数据转换失败: "['代码', '名称'] not in index"

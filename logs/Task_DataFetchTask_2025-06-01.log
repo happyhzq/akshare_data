@@ -1,5 +1,0 @@
-2025-06-01 11:55:09,814 - Task_DataFetchTask - INFO - 开始执行任务: pipeline_index_us_stock_sina_20250601115509_fetch
-2025-06-01 11:55:09,814 - Task_DataFetchTask - INFO - 开始获取数据: index_us_stock_sina
-2025-06-01 11:55:10,510 - Task_DataFetchTask - INFO - 数据获取成功: index_us_stock_sina, 行数: 5387
-2025-06-01 11:55:10,511 - Task_DataFetchTask - INFO - 任务执行成功: pipeline_index_us_stock_sina_20250601115509_fetch
-2025-06-01 11:55:10,511 - Task_DataFetchTask - INFO - 任务执行耗时: 0.70秒
